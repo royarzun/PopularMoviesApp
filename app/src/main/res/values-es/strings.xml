@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Peliculas Populares</string>
+    <string name="action_settings">Configuracion</string>
+    <string name="settings_order_by_most_popular">Ordenar por Pelicula mas Popular</string>
+    <string name="settings_order_by_top_rated">Ordenar por Mejor Puntuacion</string>
+</resources>
