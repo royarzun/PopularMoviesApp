@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/movie_grid_item_poster_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/movie_grid_item_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/grid_item_textview_size"
+        android:layout_gravity="bottom"
+        android:textColor="@android:color/white"
+        android:background="#d3000000" />
+</FrameLayout>
