@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Peliculas Populares</string>
     <string name="action_settings">Configuracion</string>
-    <string name="settings_order_by_most_popular">Ordenar por Pelicula mas Popular</string>
-    <string name="settings_order_by_top_rated">Ordenar por Mejor Puntuacion</string>
+    <string name="settings_order_by_most_popular">Ordenar por Popularidad</string>
+    <string name="settings_order_by_top_rated">Ordenar por Rating</string>
+    <string name="string_most_popular">Por Popularidad</string>
+    <string name="string_top_rated">Por Ratings</string>
 </resources>
