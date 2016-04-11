@@ -4,11 +4,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,6 +19,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class MovieListFragment extends Fragment {
@@ -25,19 +29,12 @@ public class MovieListFragment extends Fragment {
     private static final String TAG = MovieListFragment.class.getSimpleName();
     private static final String ORDER_BY = "order_by";
 
-    private GridView movieGrid;
-    private JSONArray movieArray;
+    private List<Movie> movieList;
+    private RecyclerView movieRecView;
 
     public MovieListFragment() {
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param orderBy orders movies by popularity or ratings.
-     * @return A new instance of fragment MovieListFragment.
-     */
     public static MovieListFragment newInstance(String orderBy) {
         MovieListFragment fragment = new MovieListFragment();
         Bundle args = new Bundle();
@@ -46,32 +43,54 @@ public class MovieListFragment extends Fragment {
         return fragment;
     }
 
+    private List<Movie> populate(Uri url) {
+        List<Movie> movieList = new ArrayList<>();
+        JSONArray dataArray;
+        try {
+            dataArray = new FetchMovieJSONData().execute(url).get();
+            for(int i=0; i < dataArray.length(); i++) {
+                try {
+                    Movie movie = new Movie(getActivity(), dataArray.getJSONObject(i));
+                    movieList.add(movie);
+
+                } catch (org.json.JSONException e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+
+        } catch (InterruptedException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+
+        } catch (ExecutionException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return movieList;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            movieRecView = (RecyclerView) getActivity().findViewById(R.id.movie_recycler_view);
             String orderBy = getArguments().getString(ORDER_BY);
             Uri builtUri = Uri.parse(getString(R.string.url_base) + orderBy).buildUpon()
                     .appendQueryParameter("api_key", getString(R.string.API_KEY))
                     .build();
-            try{
-                this.movieArray = new FetchMovieJSONData().execute(builtUri).get();
-            } catch (Exception e){
-                Log.e(TAG, e.getMessage());
-                e.printStackTrace();
-            }
-
+            movieList = populate(builtUri);
         }
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
-        this.movieGrid = (GridView) rootView.findViewById(R.id.movie_grid);
-        this.movieGrid.setAdapter(new MovieAdapter(getActivity(), this.movieArray));
+        movieRecView = (RecyclerView) rootView.findViewById(R.id.movie_recycler_view);
+
+        MovieRecyclerViewAdapter adapter = new MovieRecyclerViewAdapter(getActivity(), movieList);
+        movieRecView.setAdapter(adapter);
+        movieRecView.setLayoutManager(new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.VERTICAL));
         return rootView;
     }
 
@@ -98,9 +117,9 @@ public class MovieListFragment extends Fragment {
         protected JSONArray doInBackground(Uri... params) {
             HttpURLConnection connection;
             JSONArray results = null;
+
             try {
                 URL url = new URL(params[0].toString());
-
                 connection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = connection.getInputStream();
 
@@ -113,10 +132,13 @@ public class MovieListFragment extends Fragment {
                 }
                 results = new JSONObject(sBuffer.toString()).getJSONArray("results");
 
-            } catch (Exception e) {
-                Log.d(TAG, e.getMessage());
+            } catch (java.io.IOException e) {
+                Log.e(TAG, e.getMessage());
                 e.printStackTrace();
 
+            } catch (org.json.JSONException e) {
+                Log.e(TAG, e.getMessage());
+                e.printStackTrace();
             }
             return results;
         }

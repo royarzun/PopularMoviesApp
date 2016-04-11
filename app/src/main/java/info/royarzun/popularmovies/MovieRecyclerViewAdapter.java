@@ -29,13 +29,13 @@ class MovieVH extends RecyclerView.ViewHolder {
 }
 
 
-public class MovieRecycleViewAdapter extends RecyclerView.Adapter<MovieVH> {
+public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
 
     private Context mContext;
     List<Movie> list = Collections.emptyList();
 
 
-    public MovieRecycleViewAdapter(Context context, List<Movie> movieList) {
+    public MovieRecyclerViewAdapter(Context context, List<Movie> movieList) {
         mContext = context;
         list = movieList;
     }
