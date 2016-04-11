@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="grid_movie_n_cols" translatable="false">3</string>
+</resources>
