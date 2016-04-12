@@ -3,15 +3,13 @@ package info.royarzun.popularmovies;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ImageView;
-
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
 public class Movie {
+
     final static String TAG = Movie.class.getSimpleName();
 
     private String mTitle;
