@@ -1,15 +1,21 @@
 package info.royarzun.popularmovies;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,6 +26,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -87,16 +94,78 @@ public class MovieListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
         movieRecView = (RecyclerView) rootView.findViewById(R.id.movie_recycler_view);
 
-        MovieRecyclerViewAdapter adapter = new MovieRecyclerViewAdapter(getActivity(), movieList);
+        MovieRecyclerViewAdapter adapter = new MovieRecyclerViewAdapter(movieList);
         movieRecView.setAdapter(adapter);
         movieRecView.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
         return rootView;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+    interface OnVHClickedListener {
+        void onVHClicked(MovieVH vh);
+    }
+
+    static class MovieVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private final OnVHClickedListener mListener;
+
+        CardView cardView;
+        ImageView poster;
+        TextView title;
+
+        public MovieVH(View itemView, OnVHClickedListener listener) {
+            super(itemView);
+            cardView = (CardView) itemView.findViewById(R.id.card_view_item);
+            poster = (ImageView) itemView.findViewById(R.id.movie_grid_item_poster_view);
+            title = (TextView) itemView.findViewById(R.id.movie_grid_item_title_view);
+            mListener = listener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mListener.onVHClicked(this);
+        }
+    }
+
+
+    class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
+
+        List<Movie> list = Collections.emptyList();
+
+        public MovieRecyclerViewAdapter(List<Movie> movieList) {
+            list = movieList;
+        }
+
+        @Override
+        public MovieVH onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = getActivity().getLayoutInflater().inflate(R.layout.grid_item, parent, false);
+
+            return new MovieVH(v, new OnVHClickedListener() {
+                @Override
+                public void onVHClicked(MovieVH vh) {
+                    Intent intent = new Intent(getActivity(), MovieDetail.class);
+                    Movie movie = list.get(vh.getAdapterPosition());
+                    intent.putExtra("movie_title", movie.getTitle());
+                    intent.putExtra("movie_description", movie.getDescription());
+                    intent.putExtra("movie_poster_url", movie.getPosterUri().toString());
+                    intent.putExtra("movie_rating", String.valueOf(movie.getRating()));
+                    intent.putExtra("movie_popularity", String.valueOf(movie.getPopularity()));
+                    startActivity(intent);
+                }
+            });
+        }
+
+        @Override
+        public void onBindViewHolder(MovieVH holder, int position) {
+            holder.title.setText(list.get(position).getTitle());
+            Picasso.with(getActivity()).load(list.get(position).getPosterUri()).into(holder.poster);
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
     }
 
 

@@ -5,7 +5,7 @@
     android:id="@+id/card_view_item"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:layout_width="match_parent"
     card_view:cardCornerRadius="5dp">
@@ -27,12 +27,7 @@
             android:id="@+id/movie_grid_item_title_view"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:textAlignment="center" />
-
-        <TextView
-            android:id="@+id/movie_grid_item_description_view"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:padding="1dp"
             android:textAlignment="center" />
 
     </LinearLayout>
