@@ -5,7 +5,7 @@
     <string name="json_data_movie_title" translatable="false">original_title</string>
     <string name="json_data_movie_poster" translatable="false">poster_path</string>
     <string name="json_data_movie_overview" translatable="false">overview</string>
-    <string name="json_data_movie_rating" translatable="false">vote_average</string   >
+    <string name="json_data_movie_rating" translatable="false">vote_average</string>
     <string name="json_data_movie_popularity" translatable="false">popularity</string>
     <string name="string_most_popular">By Popularity</string>
     <string name="string_top_rated">By Rating</string>
