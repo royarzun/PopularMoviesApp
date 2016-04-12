@@ -18,6 +18,7 @@ public class Movie {
     private Float mPopularity;
     private String mPosterUrl;
     private Context mContext;
+    private String mReleaseDate;
 
     public Movie(Context context, JSONObject movieData) {
         mContext = context;
@@ -32,6 +33,8 @@ public class Movie {
                     getStringResource(R.string.json_data_movie_popularity)));
             mPosterUrl = movieData.getString(
                     getStringResource(R.string.json_data_movie_poster));
+            mReleaseDate = movieData.getString(
+                    getStringResource(R.string.json_data_movie_release_date));
 
         } catch (org.json.JSONException e) {
             Log.e(TAG, e.getMessage());
@@ -44,6 +47,8 @@ public class Movie {
     public String getDescription() { return mDescription; }
 
     public Float getRating() {return mRating; }
+
+    public String getReleaseDate() { return mReleaseDate; }
 
     public Float getPopularity() { return mPopularity; }
 

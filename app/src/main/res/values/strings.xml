@@ -7,6 +7,7 @@
     <string name="json_data_movie_overview" translatable="false">overview</string>
     <string name="json_data_movie_rating" translatable="false">vote_average</string>
     <string name="json_data_movie_popularity" translatable="false">popularity</string>
+    <string name="json_data_movie_release_date" translatable="false">release_date</string>
     <string name="string_most_popular">By Popularity</string>
     <string name="string_top_rated">By Rating</string>
     <string name="url_order_by_popular" translatable="false">popular</string>
