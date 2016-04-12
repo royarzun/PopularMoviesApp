@@ -151,6 +151,7 @@ public class MovieListFragment extends Fragment {
                     intent.putExtra("movie_poster_url", movie.getPosterUri().toString());
                     intent.putExtra("movie_rating", String.valueOf(movie.getRating()));
                     intent.putExtra("movie_popularity", String.valueOf(movie.getPopularity()));
+                    intent.putExtra("movie_release_date", movie.getReleaseDate());
                     startActivity(intent);
                 }
             });
