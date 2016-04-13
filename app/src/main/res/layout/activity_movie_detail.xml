@@ -11,8 +11,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:scaleType="centerCrop"
+            android:layout_height="@dimen/detail_view_movie_poster_size"
             android:id="@+id/detail_view_movie_poster" />
 
         <LinearLayout
