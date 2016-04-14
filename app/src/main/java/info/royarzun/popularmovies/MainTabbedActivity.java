@@ -10,29 +10,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 
+import butterknife.ButterKnife;
+import butterknife.Bind;
+
 
 public class MainTabbedActivity extends AppCompatActivity {
 
+    @Bind(R.id.main_view_toolbar) Toolbar toolbar;
+    @Bind(R.id.main_view_collapse_toolbar) CollapsingToolbarLayout collapsingToolbar;
+    @Bind(R.id.main_view_container) ViewPager mViewPager;
+    @Bind(R.id.main_view_tabs) TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tabbed);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapse_toolbar);
         assert collapsingToolbar != null;
         collapsingToolbar.setTitle(getString(R.string.app_name));
 
         SectionsPagerAdapter mSectionsPagerAdapter =
                 new SectionsPagerAdapter(getSupportFragmentManager());
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.icon_most_popular);
         tabLayout.getTabAt(1).setIcon(R.drawable.icon_best_rating);

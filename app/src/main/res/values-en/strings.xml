@@ -6,4 +6,7 @@
     <string name="settings_order_by_top_rated">Order by Rating</string>
     <string name="string_most_popular">By Popularity</string>
     <string name="string_top_rated">By Ratings</string>
+    <string name="label_release_date">Release date :\t</string>
+    <string name="label_votes">Voting :\t</string>
+    <string name="label_rating">Rating :\t</string>
 </resources>
