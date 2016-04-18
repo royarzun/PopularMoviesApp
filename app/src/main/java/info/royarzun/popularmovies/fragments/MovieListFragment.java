@@ -1,4 +1,4 @@
-package info.royarzun.popularmovies;
+package info.royarzun.popularmovies.fragments;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -23,6 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import info.royarzun.popularmovies.Movie;
+import info.royarzun.popularmovies.MoviesRecyclerViewAdapter;
+import info.royarzun.popularmovies.R;
+
 
 public class MovieListFragment extends Fragment {
 
@@ -30,7 +36,8 @@ public class MovieListFragment extends Fragment {
     private static final String ORDER_BY = "order_by";
 
     private List<Movie> movieList;
-    private RecyclerView movieRecView;
+    @Bind(R.id.movie_recycler_view)
+    RecyclerView movieRecView;
 
     public MovieListFragment() {
     }
@@ -72,9 +79,9 @@ public class MovieListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            movieRecView = (RecyclerView) getActivity().findViewById(R.id.movie_recycler_view);
             String orderBy = getArguments().getString(ORDER_BY);
-            Uri builtUri = Uri.parse(getString(R.string.url_base) + orderBy).buildUpon()
+            Uri builtUri = Uri.parse(getString(R.string.url_base) + orderBy)
+                    .buildUpon()
                     .appendQueryParameter("api_key", getString(R.string.API_KEY))
                     .build();
             movieList = populate(builtUri);
@@ -85,18 +92,13 @@ public class MovieListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
-        movieRecView = (RecyclerView) rootView.findViewById(R.id.movie_recycler_view);
-
+        ButterKnife.bind(this, rootView);
         MoviesRecyclerViewAdapter adapter = new MoviesRecyclerViewAdapter(getContext(), movieList);
         movieRecView.setAdapter(adapter);
         movieRecView.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
         return rootView;
     }
-
-
-
-
 
     public class FetchMovieJSONData extends AsyncTask<Uri, Void, JSONArray> {
         private final String TAG = FetchMovieJSONData.class.getSimpleName();

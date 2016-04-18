@@ -1,4 +1,4 @@
-package info.royarzun.popularmovies;
+package info.royarzun.popularmovies.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class MovieData {
+
+    public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
 
     private String posterPath;
     private Boolean adult;
@@ -320,4 +322,12 @@ public class MovieData {
                 append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
+    public static class MovieResult {
+
+        private List<MovieData> results;
+
+        public List<MovieData> getResults() {
+            return results;
+        }
+    }
 }

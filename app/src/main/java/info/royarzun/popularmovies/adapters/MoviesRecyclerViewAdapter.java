@@ -1,4 +1,4 @@
-package info.royarzun.popularmovies;
+package info.royarzun.popularmovies.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.List;
+
+import info.royarzun.popularmovies.Movie;
+import info.royarzun.popularmovies.R;
+import info.royarzun.popularmovies.activities.MovieDetail;
 
 
 interface OnVHClickedListener {
@@ -58,7 +62,7 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
 
     @Override
     public MovieVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.grid_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.movie_item, parent, false);
         return new MovieVH(view, new OnVHClickedListener() {
             @Override
             public void onVHClicked(MovieVH vh) {

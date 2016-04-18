@@ -1,4 +1,4 @@
-package info.royarzun.popularmovies;
+package info.royarzun.popularmovies.adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -7,6 +7,8 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+
+import info.royarzun.popularmovies.R;
 
 public class Movie {
 

@@ -1,4 +1,4 @@
-package info.royarzun.popularmovies;
+package info.royarzun.popularmovies.activities;
 
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -12,6 +12,8 @@ import android.os.Bundle;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import info.royarzun.popularmovies.R;
+import info.royarzun.popularmovies.fragments.MovieListFragment;
 
 
 public class MainTabbedActivity extends AppCompatActivity {
@@ -36,10 +38,13 @@ public class MainTabbedActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.icon_most_popular);
-        tabLayout.getTabAt(1).setIcon(R.drawable.icon_best_rating);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+    }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -54,6 +59,8 @@ public class MainTabbedActivity extends AppCompatActivity {
                     return MovieListFragment.newInstance(getString(R.string.url_order_by_popular));
                 case 1:
                     return MovieListFragment.newInstance(getString(R.string.url_order_by_rating));
+                case 2:
+                    return MovieListFragment.newInstance(getString(R.string.url_order_by_rating));
                 default:
                     return MovieListFragment.newInstance(getString(R.string.url_order_by_popular));
             }
@@ -61,7 +68,7 @@ public class MainTabbedActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -71,6 +78,8 @@ public class MainTabbedActivity extends AppCompatActivity {
                     return getString(R.string.string_most_popular);
                 case 1:
                     return getString(R.string.string_top_rated);
+                case 2:
+                    return getString(R.string.string_my_favorites);
             }
             return null;
         }
