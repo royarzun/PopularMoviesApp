@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -25,8 +26,8 @@ import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import info.royarzun.popularmovies.Movie;
-import info.royarzun.popularmovies.MoviesRecyclerViewAdapter;
+import info.royarzun.popularmovies.adapters.Movie;
+import info.royarzun.popularmovies.adapters.MoviesRecyclerViewAdapter;
 import info.royarzun.popularmovies.R;
 
 
@@ -95,9 +96,14 @@ public class MovieListFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         MoviesRecyclerViewAdapter adapter = new MoviesRecyclerViewAdapter(getContext(), movieList);
         movieRecView.setAdapter(adapter);
-        movieRecView.setLayoutManager(new StaggeredGridLayoutManager(2,
-                StaggeredGridLayoutManager.VERTICAL));
+        movieRecView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     public class FetchMovieJSONData extends AsyncTask<Uri, Void, JSONArray> {
