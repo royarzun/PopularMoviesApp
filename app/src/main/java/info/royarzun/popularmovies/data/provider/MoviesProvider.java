@@ -6,13 +6,12 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
 
 public class MoviesProvider extends ContentProvider {
-    private SQLiteOpenHelper mOpenHelper;
+    private MoviesDatabaseHelper dbHelper;
     private static final UriMatcher sUriMatcher = getUriMatcher();
 
     private static final int MOVIE = 100;
@@ -30,7 +29,8 @@ public class MoviesProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        return false;
+        dbHelper = new MoviesDatabaseHelper(getContext());
+        return true;
     }
 
     public static UriMatcher getUriMatcher() {
@@ -78,7 +78,7 @@ public class MoviesProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor;
 
         switch (sUriMatcher.match(uri)) {
@@ -132,7 +132,7 @@ public class MoviesProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         Uri insertionUri;
 
         long insertedId;
@@ -177,7 +177,7 @@ public class MoviesProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsUpdated;
 
         switch (sUriMatcher.match(uri)) {
@@ -209,7 +209,7 @@ public class MoviesProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsDeleted;
         //delete all rows and return the number of records deleted
         if (selection == null) {

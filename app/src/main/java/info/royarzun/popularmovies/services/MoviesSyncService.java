@@ -1,8 +1,10 @@
-package info.royarzun.popularmovies.data.sync;
+package info.royarzun.popularmovies.services;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+
+import info.royarzun.popularmovies.data.sync.MoviesSyncAdapter;
 
 
 public class MoviesSyncService extends Service {

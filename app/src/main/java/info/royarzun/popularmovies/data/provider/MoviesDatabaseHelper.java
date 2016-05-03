@@ -3,9 +3,11 @@ package info.royarzun.popularmovies.data.provider;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 
 public class MoviesDatabaseHelper extends SQLiteOpenHelper {
-    
+    private static final String TAG = MoviesDatabaseHelper.class.getSimpleName();
     static final int DB_VERSION = 1;
     static final String DB_NAME = "popular_movies_app.db";
 
@@ -25,21 +27,20 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
                 + MoviesContract.Movies.COLUMN_MOVIE_OVERVIEW + " TEXT NOT NULL, "
                 + MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH + " TEXT NOT NULL, "
                 + MoviesContract.Movies.COLUMN_MOVIE_POPULARITY + " REAL NOT NULL, "
-                + MoviesContract.Movies.COLUMN_MOVIE_FAVORED + " INTEGER DEFAULT 0, "
+                + MoviesContract.Movies.COLUMN_MOVIE_FAVORED + " BOOLEAN DEFAULT FALSE, "
                 + " UNIQUE (" + MoviesContract.Movies.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
 
         final String createTrailersTable = "CREATE TABLE " + MoviesContract.Trailers.TABLE_NAME + " ( "
-                + MoviesContract.Trailers._ID + " INTEGER PRIMARY KEY, "
+                + MoviesContract.Trailers.COLUMN_TRAILER_ID + " INTEGER PRIMARY KEY, "
                 + MoviesContract.Trailers.COLUMN_TRAILER_SITE + " TEXT NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_TRAILER_KEY + " TEXT NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "
-                + MoviesContract.Trailers.COLUMN_TRAILER_ID + " TEXT NOT NULL, "
                 + " FOREIGN KEY (" + MoviesContract.Trailers.COLUMN_MOVIE_ID + ") REFERENCES "
                 + MoviesContract.Movies.TABLE_NAME + " (" + MoviesContract.Movies.COLUMN_MOVIE_ID + "),"
                 + "UNIQUE (" + MoviesContract.Trailers.COLUMN_TRAILER_ID + ") ON CONFLICT REPLACE);";
 
         final String createReviewsTable = "CREATE TABLE " + MoviesContract.Reviews.TABLE_NAME + " ( "
-                + MoviesContract.Reviews._ID + " INTEGER PRIMARY KEY, "
+                + MoviesContract.Reviews.COLUMN_REVIEW_ID + " INTEGER PRIMARY KEY, "
                 + MoviesContract.Reviews.COLUMN_REVIEW_AUTHOR + " TEXT NOT NULL, "
                 + MoviesContract.Reviews.COLUMN_REVIEW_CONTENT + " TEXT NOT NULL, "
                 + MoviesContract.Reviews.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "
@@ -50,6 +51,7 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createMoviesTable);
         db.execSQL(createTrailersTable);
         db.execSQL(createReviewsTable);
+        Log.d(TAG, "Database tables created...");
     }
 
     @Override
