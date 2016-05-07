@@ -2,20 +2,18 @@ package info.royarzun.popularmovies.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
-import java.util.List;
-
-import info.royarzun.popularmovies.Movie;
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.activities.MovieDetail;
 
@@ -30,13 +28,11 @@ class MovieVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     CardView cardView;
     ImageView poster;
-    TextView title;
 
     public MovieVH(View itemView, OnVHClickedListener listener) {
         super(itemView);
         cardView = (CardView) itemView.findViewById(R.id.card_view_item);
         poster = (ImageView) itemView.findViewById(R.id.movie_grid_item_poster_view);
-        title = (TextView) itemView.findViewById(R.id.movie_grid_item_title_view);
         mListener = listener;
         itemView.setOnClickListener(this);
     }
@@ -50,13 +46,12 @@ class MovieVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
 
-    private List<Movie> list = Collections.emptyList();
+    private Cursor mItems;
     private Context mContext;
     LayoutInflater layoutInflater;
 
-    public MoviesRecyclerViewAdapter(Context context, List<Movie> movieList) {
+    public MoviesRecyclerViewAdapter(Context context) {
         mContext = context;
-        list = movieList;
         layoutInflater = LayoutInflater.from(mContext);
     }
 
@@ -67,13 +62,6 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
             @Override
             public void onVHClicked(MovieVH vh) {
                 Intent intent = new Intent(mContext.getApplicationContext(), MovieDetail.class);
-                Movie movie = list.get(vh.getAdapterPosition());
-                intent.putExtra("movie_title", movie.getTitle());
-                intent.putExtra("movie_description", movie.getDescription());
-                intent.putExtra("movie_poster_url", movie.getPosterUri().toString());
-                intent.putExtra("movie_rating", String.valueOf(movie.getRating()));
-                intent.putExtra("movie_popularity", String.valueOf(movie.getPopularity()));
-                intent.putExtra("movie_release_date", movie.getReleaseDate());
                 mContext.startActivity(intent);
             }
         });
@@ -81,12 +69,32 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
 
     @Override
     public void onBindViewHolder(MovieVH holder, int position) {
-        holder.title.setText(list.get(position).getTitle());
-        Picasso.with(mContext.getApplicationContext()).load(list.get(position).getPosterUri()).into(holder.poster);
+        mItems.moveToPosition(position);
+        String base = mContext.getString(R.string.url_images_base);
+        String size = mContext.getString(R.string.url_images_size);
+        Uri posterUri = Uri.parse(base).buildUpon()
+                .appendPath(size)
+                .appendPath(mItems.getString(7).substring(1))
+                .build();
+        Log.d("AFASFAFASf", posterUri.toString());
+        Picasso.with(mContext.getApplicationContext()).load(posterUri).into(holder.poster);
+    }
+
+    public Cursor getCursor() {
+        return mItems;
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        if (mItems != null)
+            return mItems.getCount();
+        return 0;
+    }
+
+    public void swapCursor(Cursor newCursor) {
+        if (newCursor != null) {
+            mItems = newCursor;
+            notifyDataSetChanged();
+        }
     }
 }

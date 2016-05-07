@@ -1,92 +1,62 @@
 package info.royarzun.popularmovies.fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import info.royarzun.popularmovies.adapters.Movie;
 import info.royarzun.popularmovies.adapters.MoviesRecyclerViewAdapter;
 import info.royarzun.popularmovies.R;
+import info.royarzun.popularmovies.data.provider.MoviesContract;
+import info.royarzun.popularmovies.services.MoviesSyncService;
 
 
-public class MovieListFragment extends Fragment {
-
+public class MovieListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = MovieListFragment.class.getSimpleName();
-    private static final String ORDER_BY = "order_by";
 
-    private List<Movie> movieList;
+    private MoviesRecyclerViewAdapter mAdapter;
+    private static final int MOVIE_LOADER = 1;
+    private static final String[] FROM = {};
+
     @Bind(R.id.movie_recycler_view)
-    RecyclerView movieRecView;
+    RecyclerView mMovieRecView;
 
     public MovieListFragment() {
     }
 
-    public static MovieListFragment newInstance(String orderBy) {
-        MovieListFragment fragment = new MovieListFragment();
-        Bundle args = new Bundle();
-        args.putString(ORDER_BY, orderBy);
-        fragment.setArguments(args);
-        return fragment;
+    public static MovieListFragment newInstance() {
+        return new MovieListFragment();
     }
 
-    private List<Movie> populate(Uri url) {
-        List<Movie> movieList = new ArrayList<>();
-        JSONArray dataArray;
-        try {
-            dataArray = new FetchMovieJSONData().execute(url).get();
-            for(int i=0; i < dataArray.length(); i++) {
-                try {
-                    Movie movie = new Movie(getActivity(), dataArray.getJSONObject(i));
-                    movieList.add(movie);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-                } catch (org.json.JSONException e) {
-                    Log.e(TAG, e.getMessage());
-                }
-            }
-
-        } catch (InterruptedException e) {
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-
-        } catch (ExecutionException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        return movieList;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            String orderBy = getArguments().getString(ORDER_BY);
-            Uri builtUri = Uri.parse(getString(R.string.url_base) + orderBy)
-                    .buildUpon()
-                    .appendQueryParameter("api_key", getString(R.string.API_KEY))
-                    .build();
-            movieList = populate(builtUri);
-        }
+
+        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
+        updateMoviesServiceDB();
+        Log.d(TAG, "onCreate");
     }
 
     @Override
@@ -94,9 +64,11 @@ public class MovieListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
         ButterKnife.bind(this, rootView);
-        MoviesRecyclerViewAdapter adapter = new MoviesRecyclerViewAdapter(getContext(), movieList);
-        movieRecView.setAdapter(adapter);
-        movieRecView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+
+        mAdapter = new MoviesRecyclerViewAdapter(getContext());
+        mMovieRecView.setAdapter(mAdapter);
+        mMovieRecView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        Log.d(TAG, "onCreateView");
         return rootView;
     }
 
@@ -104,49 +76,34 @@ public class MovieListFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        Log.d(TAG, "Fragment destroyed");
     }
 
-    public class FetchMovieJSONData extends AsyncTask<Uri, Void, JSONArray> {
-        private final String TAG = FetchMovieJSONData.class.getSimpleName();
+    private void updateMoviesServiceDB() {
+        Intent alarmIntent = new Intent(getActivity(), MoviesSyncService.AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent,
+                PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getActivity()
+                .getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 500, pendingIntent);
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri contentUri = MoviesContract.Movies.CONTENT_URI;
+        return new CursorLoader(getActivity(), contentUri, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (mAdapter!=null) {
+            mAdapter.swapCursor(data);
         }
+    }
 
-        @Override
-        protected void onPostExecute(JSONArray jsonArray) {
-            super.onPostExecute(jsonArray);
-        }
 
-        @Override
-        protected JSONArray doInBackground(Uri... params) {
-            HttpURLConnection connection;
-            JSONArray results = null;
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
-            try {
-                URL url = new URL(params[0].toString());
-                connection = (HttpURLConnection) url.openConnection();
-                InputStream inputStream = connection.getInputStream();
-
-                StringBuffer sBuffer = new StringBuffer();
-                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = br.readLine()) != null) {
-                    sBuffer.append(line.trim());
-                }
-                results = new JSONObject(sBuffer.toString()).getJSONArray("results");
-
-            } catch (java.io.IOException e) {
-                Log.e(TAG, e.getMessage());
-                e.printStackTrace();
-
-            } catch (org.json.JSONException e) {
-                Log.e(TAG, e.getMessage());
-                e.printStackTrace();
-            }
-            return results;
-        }
     }
 }
