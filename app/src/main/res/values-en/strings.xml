@@ -9,4 +9,5 @@
     <string name="label_release_date">Release date :\t</string>
     <string name="label_votes">Voting :\t</string>
     <string name="label_rating">Rating :\t</string>
+    <string name="string_my_favorites">My Favorites</string>
 </resources>

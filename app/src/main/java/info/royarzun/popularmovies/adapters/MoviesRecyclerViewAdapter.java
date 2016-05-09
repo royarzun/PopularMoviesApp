@@ -45,7 +45,7 @@ class MovieVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
 public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
-
+    private static final String TAG = MoviesRecyclerViewAdapter.class.getSimpleName();
     private Cursor mItems;
     private Context mContext;
     LayoutInflater layoutInflater;
@@ -70,13 +70,12 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
     @Override
     public void onBindViewHolder(MovieVH holder, int position) {
         mItems.moveToPosition(position);
-        String base = mContext.getString(R.string.url_images_base);
-        String size = mContext.getString(R.string.url_images_size);
+        String base = "http://image.tmdb.org/t/p/";
+        String size = "w300";
         Uri posterUri = Uri.parse(base).buildUpon()
                 .appendPath(size)
                 .appendPath(mItems.getString(7).substring(1))
                 .build();
-        Log.d("AFASFAFASf", posterUri.toString());
         Picasso.with(mContext.getApplicationContext()).load(posterUri).into(holder.poster);
     }
 

@@ -37,7 +37,7 @@ public class MoviesSyncService extends IntentService {
         JSONArray results = null;
         String[] urlStrings = {
                 "https://api.themoviedb.org/3/movie/top_rated",
-                "https://api.themoviedb.org/3/movie/top_rated"
+                "https://api.themoviedb.org/3/movie/popular"
         };
 
         for (String urlString: urlStrings)
@@ -122,8 +122,8 @@ public class MoviesSyncService extends IntentService {
         for (int i = 0; i < contentValuesVectorVector.size(); i++) {
             this.getContentResolver().insert(MoviesContract.Movies.CONTENT_URI,
                     contentValuesVectorVector.get(i));
-            Log.d(TAG, "Movie data inserted...");
         }
+        Log.d(TAG, "Movie data inserted...");
     }
 
     @Override

@@ -1,5 +1,9 @@
 package info.royarzun.popularmovies.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.Bind;
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.fragments.MovieListFragment;
+import info.royarzun.popularmovies.services.MoviesSyncService;
 
 
 public class MainTabbedActivity extends AppCompatActivity {
@@ -26,6 +31,8 @@ public class MainTabbedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        updateMoviesServiceDB();
+
         setContentView(R.layout.activity_main_tabbed);
 
         ButterKnife.bind(this);
@@ -46,6 +53,14 @@ public class MainTabbedActivity extends AppCompatActivity {
         ButterKnife.unbind(this);
     }
 
+    private void updateMoviesServiceDB() {
+        Intent alarmIntent = new Intent(this, MoviesSyncService.AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent,
+                PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 500, pendingIntent);
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -56,14 +71,13 @@ public class MainTabbedActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return MovieListFragment.newInstance(getString(R.string.url_order_by_popular));
+                    return MovieListFragment.newInstance(MovieListFragment.POPULAR_MOVIES);
                 case 1:
-                    return MovieListFragment.newInstance(getString(R.string.url_order_by_rating));
+                    return MovieListFragment.newInstance(MovieListFragment.TOP_RATED_MOVIES);
                 case 2:
-                    return MovieListFragment.newInstance(getString(R.string.url_order_by_rating));
-                default:
-                    return MovieListFragment.newInstance(getString(R.string.url_order_by_popular));
+                    return MovieListFragment.newInstance(MovieListFragment.MY_FAVORITE_MOVIES);
             }
+            return null;
         }
 
         @Override

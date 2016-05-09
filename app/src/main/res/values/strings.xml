@@ -15,14 +15,13 @@
     <string name="string_top_rated">By Rating</string>
     <string name="url_order_by_popular" translatable="false">popular</string>
     <string name="url_order_by_rating" translatable="false">top_rated</string>
-    <string name="url_base" translatable="false">https://api.themoviedb.org/3/movie/</string>
-    <string name="url_images_base" translatable="false">http://image.tmdb.org/t/p/</string>
-    <string name="url_images_size" translatable="false">w300</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="grid_movie_n_cols" translatable="false">2</string>
     <string name="title_activity_movie_detail">MovieDetail</string>
     <string name="title_activity_movies">MoviesActivity</string>
     <string name="label_release_date">Release date :\t</string>
     <string name="label_votes">Voting :\t</string>
     <string name="label_rating">Rating :\t</string>
+    <string name="string_my_favorites">My Favorites</string>
+    <string name="sync_account_type">popularmovies.royarzun.info</string>
+    <string name="content_authority">info.royarzun.popularmovies</string>
 </resources>

@@ -30,9 +30,15 @@ import info.royarzun.popularmovies.services.MoviesSyncService;
 public class MovieListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = MovieListFragment.class.getSimpleName();
 
-    private MoviesRecyclerViewAdapter mAdapter;
+    public static final int POPULAR_MOVIES = 0;
+    public static final int TOP_RATED_MOVIES = 1;
+    public static final int MY_FAVORITE_MOVIES = 2;
+
     private static final int MOVIE_LOADER = 1;
-    private static final String[] FROM = {};
+    private static final String LIST_TYPE_PARAM = "listType";
+
+    private MoviesRecyclerViewAdapter mAdapter;
+    private int mListType;
 
     @Bind(R.id.movie_recycler_view)
     RecyclerView mMovieRecView;
@@ -40,8 +46,12 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
     public MovieListFragment() {
     }
 
-    public static MovieListFragment newInstance() {
-        return new MovieListFragment();
+    public static MovieListFragment newInstance(int listType) {
+        MovieListFragment fragment = new MovieListFragment();
+        Bundle args = new Bundle();
+        args.putInt(LIST_TYPE_PARAM, listType);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -53,7 +63,9 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() != null) {
+            mListType = getArguments().getInt(LIST_TYPE_PARAM);
+        }
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);
         updateMoviesServiceDB();
         Log.d(TAG, "onCreate");
@@ -91,7 +103,21 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri contentUri = MoviesContract.Movies.CONTENT_URI;
-        return new CursorLoader(getActivity(), contentUri, null, null, null, null);
+        switch (mListType){
+            case POPULAR_MOVIES:
+                Log.d(TAG, "loading popular movies fragment");
+                return new CursorLoader(getActivity(), contentUri, null, null, null,
+                        MoviesContract.Movies.POPULARITY_SORT);
+            case TOP_RATED_MOVIES:
+                Log.d(TAG, "loading top rated movies fragment");
+                return new CursorLoader(getActivity(), contentUri, null, null, null,
+                        MoviesContract.Movies.VOTE_SORT);
+            case MY_FAVORITE_MOVIES:
+                Log.d(TAG, "loading my favorite movies list");
+                return new CursorLoader(getActivity(), contentUri, null, null, null, null);
+            default:
+                return new CursorLoader(getActivity(), contentUri, null, null, null, null);
+        }
     }
 
     @Override
@@ -100,7 +126,6 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
             mAdapter.swapCursor(data);
         }
     }
-
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {

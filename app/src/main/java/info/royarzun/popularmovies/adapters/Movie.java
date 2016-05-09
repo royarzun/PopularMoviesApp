@@ -67,8 +67,8 @@ public class Movie {
     }
 
     private String getImageUrl(String imageUrl) throws UnsupportedEncodingException {
-        String base = getStringResource(R.string.url_images_base);
-        String size = getStringResource(R.string.url_images_size);
+        String base = "https://api.themoviedb.org/3/movie/";
+        String size = "w300";
         Uri builtUri = Uri.parse(base).buildUpon()
                 .appendPath(size)
                 .build();
