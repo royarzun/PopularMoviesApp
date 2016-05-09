@@ -21,7 +21,7 @@ import info.royarzun.popularmovies.fragments.MovieListFragment;
 import info.royarzun.popularmovies.services.MoviesSyncService;
 
 
-public class MainTabbedActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.main_view_toolbar) Toolbar toolbar;
     @Bind(R.id.main_view_collapse_toolbar) CollapsingToolbarLayout collapsingToolbar;
