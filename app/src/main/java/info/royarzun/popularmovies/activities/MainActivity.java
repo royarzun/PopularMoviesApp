@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         updateMoviesServiceDB();
 
-        setContentView(R.layout.activity_main_tabbed);
+        setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);

@@ -1,7 +1,6 @@
 package info.royarzun.popularmovies.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import info.royarzun.popularmovies.R;
-import info.royarzun.popularmovies.activities.MovieDetail;
 
 
 interface OnVHClickedListener {
@@ -61,8 +59,8 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
         return new MovieVH(view, new OnVHClickedListener() {
             @Override
             public void onVHClicked(MovieVH vh) {
-                Intent intent = new Intent(mContext.getApplicationContext(), MovieDetail.class);
-                mContext.startActivity(intent);
+
+                Log.d(TAG, "Blah");
             }
         });
     }

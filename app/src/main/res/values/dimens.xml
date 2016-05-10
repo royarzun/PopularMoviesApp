@@ -3,5 +3,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="grid_item_textview_size">45dp</dimen>
-    <dimen name="detail_view_movie_poster_size">400dp</dimen>
+    <dimen name="detail_view_movie_poster_size">200dp</dimen>
 </resources>

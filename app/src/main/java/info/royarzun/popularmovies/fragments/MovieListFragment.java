@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 import info.royarzun.popularmovies.adapters.MoviesRecyclerViewAdapter;
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.data.provider.MoviesContract;
-import info.royarzun.popularmovies.services.MoviesSyncService;
 
 
 public class MovieListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -67,7 +66,6 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
             mListType = getArguments().getInt(LIST_TYPE_PARAM);
         }
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);
-        updateMoviesServiceDB();
         Log.d(TAG, "onCreate");
     }
 
@@ -89,15 +87,6 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
         super.onDestroy();
         ButterKnife.unbind(this);
         Log.d(TAG, "Fragment destroyed");
-    }
-
-    private void updateMoviesServiceDB() {
-        Intent alarmIntent = new Intent(getActivity(), MoviesSyncService.AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent,
-                PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager alarmManager = (AlarmManager) getActivity()
-                .getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 500, pendingIntent);
     }
 
     @Override
