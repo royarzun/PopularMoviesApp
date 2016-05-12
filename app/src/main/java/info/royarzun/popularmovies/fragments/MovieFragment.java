@@ -33,10 +33,8 @@ public class MovieFragment extends Fragment {
     @Bind(R.id.fragment_rating_text) TextView ratingText;
     @Bind(R.id.fragment_movie_popularity) TextView popularity;
     @Bind(R.id.fragment_movie_overview) TextView description;
-   // @Bind(R.id.detail_view_movie_trailer) YouTubePlayerView trailerView;
 
-    public static final String ID_PARAM = "movie_id";
-    private static final int RECOVERY_REQUEST = 1;
+    public static final String ARGS_ID_PARAM = "movie_id";
 
     private OnFragmentInteractionListener mListener;
 
@@ -46,7 +44,7 @@ public class MovieFragment extends Fragment {
     public static MovieFragment newInstance(int movie_id) {
         MovieFragment fragment = new MovieFragment();
         Bundle args = new Bundle();
-        args.putInt(ID_PARAM, movie_id);
+        args.putInt(ARGS_ID_PARAM, movie_id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,7 +72,7 @@ public class MovieFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (getArguments() != null) {
-            updateView(getArguments().getInt(ID_PARAM));
+            updateView(getArguments().getInt(ARGS_ID_PARAM));
         }
         else {
             updateView(-1);

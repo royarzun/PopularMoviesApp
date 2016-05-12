@@ -30,7 +30,7 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
     public static final int MY_FAVORITE_MOVIES = 2;
 
     private static final int MOVIE_LOADER = 1;
-    private static final String LIST_TYPE_PARAM = "listType";
+    private static final String ARGS_LIST_TYPE_PARAM = "listType";
 
     private MoviesRecyclerViewAdapter mAdapter;
     private boolean mTwoPane = false;
@@ -45,7 +45,7 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
     public static MovieListFragment newInstance(int listType) {
         MovieListFragment fragment = new MovieListFragment();
         Bundle args = new Bundle();
-        args.putInt(LIST_TYPE_PARAM, listType);
+        args.putInt(ARGS_LIST_TYPE_PARAM, listType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +60,7 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mListType = getArguments().getInt(LIST_TYPE_PARAM);
+            mListType = getArguments().getInt(ARGS_LIST_TYPE_PARAM);
         }
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);
         Log.d(TAG, "onCreate");
