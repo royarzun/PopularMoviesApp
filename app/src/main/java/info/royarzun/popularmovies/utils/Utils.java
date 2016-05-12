@@ -12,4 +12,13 @@ public class Utils {
                 .build();
         return posterUri;
     }
+
+    public static Uri getBackDropUri(String suffix) {
+        String base = "http://image.tmdb.org/t/p/";
+        String size = "w1280";
+        Uri posterUri = Uri.parse(base).buildUpon().appendPath(size)
+                .appendPath(suffix.substring(1))
+                .build();
+        return posterUri;
+    }
 }

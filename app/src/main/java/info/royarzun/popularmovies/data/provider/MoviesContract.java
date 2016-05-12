@@ -16,6 +16,7 @@ public final class MoviesContract {
         String COLUMN_MOVIE_RELEASE_DATE = "movie_release_date";
         String COLUMN_MOVIE_FAVORED = "movie_favored";
         String COLUMN_MOVIE_POSTER_PATH = "movie_poster_path";
+        String COLUMN_MOVIE_BACKDROP_PATH = "movie_backdrop_path";
     }
 
     public interface ReviewsColumns {

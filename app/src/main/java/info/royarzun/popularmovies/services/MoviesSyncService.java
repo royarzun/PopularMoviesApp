@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.Vector;
 
 import info.royarzun.popularmovies.BuildConfig;
-import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.data.provider.MoviesContract;
 
 
@@ -70,6 +69,7 @@ public class MoviesSyncService extends IntentService {
         final String movie_overview = "overview";
         final String movie_rating = "vote_average";
         final String movie_poster = "poster_path";
+        final String movie_backdrop = "backdrop_path";
         final String movie_popularity = "popularity";
         final String movie_release_date = "release_date";
 
@@ -95,6 +95,7 @@ public class MoviesSyncService extends IntentService {
                 String overview = JSONMovie.getString(movie_overview);
                 String popularity = JSONMovie.get(movie_popularity).toString();
                 String posterPath = JSONMovie.getString(movie_poster);
+                String backdrop = JSONMovie.getString(movie_backdrop);
                 String releaseDate = JSONMovie.getString(movie_release_date);
                 String title = JSONMovie.getString(movie_title);
                 String voteAverage = JSONMovie.getString(movie_rating);
@@ -106,6 +107,7 @@ public class MoviesSyncService extends IntentService {
                 movieValues.put(MoviesContract.MoviesColumns.COLUMN_MOVIE_OVERVIEW, overview);
                 movieValues.put(MoviesContract.MoviesColumns.COLUMN_MOVIE_POPULARITY, popularity);
                 movieValues.put(MoviesContract.MoviesColumns.COLUMN_MOVIE_POSTER_PATH, posterPath);
+                movieValues.put(MoviesContract.MoviesColumns.COLUMN_MOVIE_BACKDROP_PATH, backdrop);
                 movieValues.put(MoviesContract.MoviesColumns.COLUMN_MOVIE_RELEASE_DATE,
                         releaseDate);
                 movieValues.put(MoviesContract.MoviesColumns.COLUMN_MOVIE_TITLE, title);

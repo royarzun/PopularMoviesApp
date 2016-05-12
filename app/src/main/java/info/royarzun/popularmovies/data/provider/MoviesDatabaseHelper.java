@@ -5,10 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-
 public class MoviesDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = MoviesDatabaseHelper.class.getSimpleName();
-    static final int DB_VERSION = 1;
+    static final int DB_VERSION = 2;
     static final String DB_NAME = "popular_movies_app.db";
 
     public MoviesDatabaseHelper(Context context) {
@@ -26,6 +25,7 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
                 + MoviesContract.Movies.COLUMN_MOVIE_VOTE_COUNT + " INTEGER NOT NULL, "
                 + MoviesContract.Movies.COLUMN_MOVIE_OVERVIEW + " TEXT NOT NULL, "
                 + MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH + " TEXT NOT NULL, "
+                + MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH + " TEXT NOT NULL, "
                 + MoviesContract.Movies.COLUMN_MOVIE_POPULARITY + " REAL NOT NULL, "
                 + MoviesContract.Movies.COLUMN_MOVIE_FAVORED + " BOOLEAN DEFAULT FALSE, "
                 + " UNIQUE (" + MoviesContract.Movies.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
