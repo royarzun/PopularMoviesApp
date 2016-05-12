@@ -105,11 +105,11 @@ public class MovieFragment extends Fragment {
         cursor.close();
 
         title.setText(cTitle);
-        release.setText(cRelease);
+        release.setText(getString(R.string.label_release_date) + Utils.getDateInNiceFormat(cRelease));
         rating.setNumStars(5);
         rating.setRating(cRating/2);
-        ratingText.setText("(" + getString(R.string.label_rating) + " : " + String.valueOf(cRating) + ")");
-        popularity.setText(cPopularity);
+        ratingText.setText("(" + getString(R.string.label_rating) + String.valueOf(cRating) + ")");
+        popularity.setText(getString(R.string.label_popularity) + cPopularity);
         description.setText(cDescription);
 
         Log.d(TAG, Utils.getPosterUri(cBackdropUrl).toString());

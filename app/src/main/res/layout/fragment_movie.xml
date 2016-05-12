@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@android:dimen/notification_large_icon_height"
     tools:context=".fragments.MovieFragment">
 
     <RelativeLayout
@@ -43,12 +42,21 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/fragment_movie_release" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/fragment_movie_popularity" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <RatingBar
@@ -65,11 +73,6 @@
                     android:id="@+id/fragment_rating_text"/>
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:id="@+id/fragment_movie_popularity" />
 
         </LinearLayout>
 
@@ -86,7 +89,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/fragment_movie_trailer_list"
-            android:layout_toRightOf="@+id/fragment_movie_poster"
             android:layout_below="@+id/fragment_movie_overview" />
 
     </RelativeLayout>

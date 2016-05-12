@@ -7,7 +7,7 @@
     <string name="string_most_popular">Por Popularidad</string>
     <string name="string_top_rated">Por Ratings</string>
     <string name="label_release_date">Fecha de Lanzamiento :\t</string>
-    <string name="label_votes">Votacion :\t</string>
+    <string name="label_votes">Popularidad :\t</string>
     <string name="label_rating">Rating :\t</string>
     <string name="string_my_favorites">Mis Favoritas</string>
 </resources>
