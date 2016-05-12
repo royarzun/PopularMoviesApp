@@ -68,13 +68,10 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
     @Override
     public void onBindViewHolder(MovieVH holder, int position) {
         mItems.moveToPosition(position);
-        String base = "http://image.tmdb.org/t/p/";
-        String size = "w300";
-        Uri posterUri = Uri.parse(base).buildUpon()
-                .appendPath(size)
-                .appendPath(mItems.getString(7).substring(1))
-                .build();
-        Picasso.with(mContext.getApplicationContext()).load(posterUri).into(holder.poster);
+        holder.setMovieID(mItems.getInt(mItems.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_ID)));
+        holder.setPosterUri(Utils.getPosterUri(mItems.getString(mItems.getColumnIndex(
+                MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH))));
+        Picasso.with(mContext.getApplicationContext()).load(holder.getPosterUri()).into(holder.mPoster);
     }
 
     public Cursor getCursor() {
