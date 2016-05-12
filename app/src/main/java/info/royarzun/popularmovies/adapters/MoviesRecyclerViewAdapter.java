@@ -1,6 +1,6 @@
 package info.royarzun.popularmovies.adapters;
 
-import android.content.Context;
+import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import info.royarzun.popularmovies.R;
+import info.royarzun.popularmovies.data.provider.MoviesContract;
+import info.royarzun.popularmovies.fragments.MovieFragment;
+import info.royarzun.popularmovies.utils.Utils;
 
 
 interface OnVHClickedListener {
@@ -23,14 +26,16 @@ interface OnVHClickedListener {
 class MovieVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private final OnVHClickedListener mListener;
+    private Uri mPosterUri;
+    private int mId;
 
-    CardView cardView;
-    ImageView poster;
+    CardView mCardView;
+    ImageView mPoster;
 
     public MovieVH(View itemView, OnVHClickedListener listener) {
         super(itemView);
-        cardView = (CardView) itemView.findViewById(R.id.card_view_item);
-        poster = (ImageView) itemView.findViewById(R.id.movie_grid_item_poster_view);
+        mCardView = (CardView) itemView.findViewById(R.id.card_view_item);
+        mPoster = (ImageView) itemView.findViewById(R.id.movie_grid_item_poster_view);
         mListener = listener;
         itemView.setOnClickListener(this);
     }
@@ -39,18 +44,36 @@ class MovieVH extends RecyclerView.ViewHolder implements View.OnClickListener {
     public void onClick(View v) {
         mListener.onVHClicked(this);
     }
+
+    public void setMovieID(int id) {
+        mId = id;
+    }
+
+    public int getMovieID() {
+        return mId;
+    }
+
+    public void setPosterUri(Uri uri) {
+        mPosterUri = uri;
+    }
+
+    public Uri getPosterUri() {
+        return mPosterUri;
+    }
 }
 
 
 public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
     private static final String TAG = MoviesRecyclerViewAdapter.class.getSimpleName();
     private Cursor mItems;
-    private Context mContext;
+    private Activity mContext;
+    private boolean mTwoPane;
     LayoutInflater layoutInflater;
 
-    public MoviesRecyclerViewAdapter(Context context) {
-        mContext = context;
+    public MoviesRecyclerViewAdapter(Activity context, boolean twoPane) {
+        mContext =  context;
         layoutInflater = LayoutInflater.from(mContext);
+        mTwoPane = twoPane;
     }
 
     @Override
@@ -59,8 +82,14 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
         return new MovieVH(view, new OnVHClickedListener() {
             @Override
             public void onVHClicked(MovieVH vh) {
-
-                Log.d(TAG, "Blah");
+                if (mTwoPane) {
+                    MovieFragment fragment = MovieFragment.newInstance(vh.getMovieID());
+                    mContext.getFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_detail, fragment).commit();
+                }
+                else {
+                    Log.d(TAG, "One panes detected");
+                }
             }
         });
     }

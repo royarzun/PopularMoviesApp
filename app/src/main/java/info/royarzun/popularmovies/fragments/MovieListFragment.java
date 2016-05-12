@@ -1,9 +1,5 @@
 package info.royarzun.popularmovies.fragments;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,6 +33,7 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
     private static final String LIST_TYPE_PARAM = "listType";
 
     private MoviesRecyclerViewAdapter mAdapter;
+    private boolean mTwoPane = false;
     private int mListType;
 
     @Bind(R.id.movie_recycler_view)
@@ -74,8 +71,10 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
         ButterKnife.bind(this, rootView);
-
-        mAdapter = new MoviesRecyclerViewAdapter(getContext());
+        if (getActivity().findViewById(R.id.fragment_detail) != null) {
+            mTwoPane = true;
+        }
+        mAdapter = new MoviesRecyclerViewAdapter(getActivity(), mTwoPane);
         mMovieRecView.setAdapter(mAdapter);
         mMovieRecView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         Log.d(TAG, "onCreateView");
