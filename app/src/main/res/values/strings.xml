@@ -1,7 +1,6 @@
 <resources>
     <string name="action_settings">Settings</string>
     <string name="app_name">Popular Movies</string>
-    <string name="API_KEY" translatable="false">4a6750bdfd4e2c08f2e82b5f0ddfbbf6</string>
     <string name="json_data_movie_id" translatable="false">id</string>
     <string name="json_data_movie_title" translatable="false">original_title</string>
     <string name="json_data_movie_poster" translatable="false">poster_path</string>

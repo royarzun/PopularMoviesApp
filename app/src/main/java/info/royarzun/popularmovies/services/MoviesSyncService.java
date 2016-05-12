@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
+import info.royarzun.popularmovies.BuildConfig;
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.data.provider.MoviesContract;
 
@@ -43,7 +44,7 @@ public class MoviesSyncService extends IntentService {
         for (String urlString: urlStrings)
             try {
                 Uri builtUri = Uri.parse(urlString).buildUpon()
-                        .appendQueryParameter("api_key", getString(R.string.API_KEY)).build();
+                        .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
                 URL url = new URL(builtUri.toString());
                 connection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = connection.getInputStream();

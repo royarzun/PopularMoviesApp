@@ -33,7 +33,6 @@ public class MovieFragment extends Fragment {
    // @Bind(R.id.detail_view_movie_trailer) YouTubePlayerView trailerView;
 
     public static final String ID_PARAM = "movie_id";
-    private static final String YOUTUBE_API_KEY = "AIzaSyBaDBMb3FjtUFYUcrXsU6Zl6qIqTZU-54I";
     private static final int RECOVERY_REQUEST = 1;
 
     private OnFragmentInteractionListener mListener;
