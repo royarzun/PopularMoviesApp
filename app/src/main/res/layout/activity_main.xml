@@ -27,7 +27,7 @@
                 android:gravity="top"
                 android:layout_height="141dp"
                 android:layout_width="match_parent"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/AppTheme" />
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/main_view_tabs"
