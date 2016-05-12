@@ -90,7 +90,7 @@ public class MoviesProvider extends ContentProvider {
             case MOVIE_ID: {
                 long _id = MoviesContract.Movies.getMovieId(uri);
                 cursor = db.query(MoviesContract.Movies.TABLE_NAME, projection,
-                        MoviesContract.Movies._ID + " = ?", new String[]{Long.toString(_id)}, null,
+                        MoviesContract.Movies.COLUMN_MOVIE_ID + " = ?", new String[]{Long.toString(_id)}, null,
                         null, sortOrder);
                 break;
             }
