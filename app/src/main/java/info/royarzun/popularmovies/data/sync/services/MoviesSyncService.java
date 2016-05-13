@@ -1,4 +1,4 @@
-package info.royarzun.popularmovies.services;
+package info.royarzun.popularmovies.data.sync.services;
 
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
