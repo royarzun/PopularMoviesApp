@@ -1,4 +1,4 @@
-package info.royarzun.popularmovies.fragments;
+package info.royarzun.popularmovies.ui.fragments;
 
 import android.app.Fragment;
 import android.content.ContentUris;
@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.data.provider.MoviesContract;
 import info.royarzun.popularmovies.utils.Utils;
@@ -33,8 +34,10 @@ public class MovieFragment extends Fragment {
     @Bind(R.id.fragment_rating_text) TextView ratingText;
     @Bind(R.id.fragment_movie_popularity) TextView popularity;
     @Bind(R.id.fragment_movie_overview) TextView description;
+    @Bind(R.id.fragment_movie_favorite_button) FloatingActionButton favButton;
 
     public static final String ARGS_ID_PARAM = "movie_id";
+    private static final int BACKDROP_LOADER = 2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -89,19 +92,22 @@ public class MovieFragment extends Fragment {
         }
 
         Uri uri = ContentUris.withAppendedId(MoviesContract.Movies.CONTENT_URI, id);
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+        final Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
         if (!cursor.moveToFirst()){
+            cursor.close();
             return;
         }
+
+        String cBackdropUrl = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH));
+        Picasso.with(getActivity()).load(Utils.getBackDropUri(cBackdropUrl)).into(backdrop);
         String cTitle = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_TITLE));
         String cRelease = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_RELEASE_DATE));
         Float cRating = cursor.getFloat(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_VOTE_AVERAGE));
         String cPopularity = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_POPULARITY));
         String cPosterUrl = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH));
-        String cBackdropUrl = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH));
         String cDescription = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_OVERVIEW));
-        cursor.close();
-
+        String cIsFavored = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_FAVORED));
+        Picasso.with(getActivity()).load(Utils.getPosterUri(cPosterUrl)).into(poster);
         title.setText(cTitle);
         release.setText(getString(R.string.label_release_date) + Utils.getDateInNiceFormat(cRelease));
         rating.setNumStars(5);
@@ -109,10 +115,10 @@ public class MovieFragment extends Fragment {
         ratingText.setText("(" + getString(R.string.label_rating) + String.valueOf(cRating) + ")");
         popularity.setText(getString(R.string.label_popularity) + cPopularity);
         description.setText(cDescription);
-
-        Log.d(TAG, Utils.getPosterUri(cBackdropUrl).toString());
-        Picasso.with(getActivity()).load(Utils.getBackDropUri(cBackdropUrl)).into(backdrop);
-        Picasso.with(getActivity()).load(Utils.getPosterUri(cPosterUrl)).into(poster);
+        Log.d(TAG, cIsFavored);
+        favButton.setSelected(Boolean.parseBoolean(cIsFavored));
+        cursor.close();
+        //Log.d(TAG, favButton.get);
     }
 
     @Override

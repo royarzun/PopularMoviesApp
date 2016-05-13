@@ -1,4 +1,4 @@
-package info.royarzun.popularmovies.fragments;
+package info.royarzun.popularmovies.ui.fragments;
 
 import android.database.Cursor;
 import android.net.Uri;

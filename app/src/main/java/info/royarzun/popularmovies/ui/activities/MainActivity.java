@@ -1,4 +1,4 @@
-package info.royarzun.popularmovies.activities;
+package info.royarzun.popularmovies.ui.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -17,7 +17,7 @@ import android.os.Bundle;
 import butterknife.ButterKnife;
 import butterknife.Bind;
 import info.royarzun.popularmovies.R;
-import info.royarzun.popularmovies.fragments.MovieListFragment;
+import info.royarzun.popularmovies.ui.fragments.MovieListFragment;
 import info.royarzun.popularmovies.data.sync.services.MoviesSyncService;
 
 

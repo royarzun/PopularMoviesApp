@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.data.provider.MoviesContract;
-import info.royarzun.popularmovies.fragments.MovieFragment;
+import info.royarzun.popularmovies.ui.fragments.MovieFragment;
 import info.royarzun.popularmovies.utils.Utils;
 
 
