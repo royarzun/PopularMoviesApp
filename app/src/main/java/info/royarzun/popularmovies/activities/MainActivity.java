@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.Bind;
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.fragments.MovieListFragment;
-import info.royarzun.popularmovies.services.MoviesSyncService;
+import info.royarzun.popularmovies.data.sync.services.MoviesSyncService;
 
 
 public class MainActivity extends AppCompatActivity {
