@@ -8,7 +8,6 @@ import java.util.List;
 
 
 public class Movie implements Parcelable{
-    public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
 
     @SerializedName("id")
     public int id;
@@ -21,6 +20,9 @@ public class Movie implements Parcelable{
 
     @SerializedName("poster_path")
     public String posterPath;
+
+    @SerializedName("backdrop_path")
+    public String backdropPath;
 
     @SerializedName("popularity")
     public float popularity;
@@ -43,6 +45,7 @@ public class Movie implements Parcelable{
         overview = in.readString();
         releaseDate = in.readString();
         posterPath = in.readString();
+        backdropPath = in.readString();
         popularity = in.readFloat();
         title = in.readString();
         voteAverage = in.readFloat();
