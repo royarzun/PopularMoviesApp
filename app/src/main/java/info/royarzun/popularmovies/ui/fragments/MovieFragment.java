@@ -7,11 +7,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -25,7 +30,10 @@ import info.royarzun.popularmovies.utils.Utils;
 
 
 public class MovieFragment extends Fragment {
+    public static final String ARGS_ID_PARAM = "movie_id";
     private static final String TAG = MovieFragment.class.getSimpleName();
+    private OnFragmentInteractionListener mListener;
+
     @Bind(R.id.fragment_movie_poster) ImageView poster;
     @Bind(R.id.fragment_movie_backdrop) ImageView backdrop;
     @Bind(R.id.fragment_movie_title) TextView title;
@@ -35,11 +43,9 @@ public class MovieFragment extends Fragment {
     @Bind(R.id.fragment_movie_popularity) TextView popularity;
     @Bind(R.id.fragment_movie_overview) TextView description;
     @Bind(R.id.fragment_movie_favorite_button) FloatingActionButton favButton;
+    @Bind(R.id.fragment_movie_review_label) TextView reviewLabel;
+    @Bind(R.id.fragment_movie_comments_list) ListView commentList;
 
-    public static final String ARGS_ID_PARAM = "movie_id";
-    private static final int BACKDROP_LOADER = 2;
-
-    private OnFragmentInteractionListener mListener;
 
     public MovieFragment() {
     }
@@ -61,13 +67,7 @@ public class MovieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie, container, false);
-
         ButterKnife.bind(this, rootView);
-        title.setText("");
-        release.setText("");
-        popularity.setText("");
-        description.setText("");
-
         return rootView;
     }
 
@@ -82,7 +82,7 @@ public class MovieFragment extends Fragment {
         }
     }
 
-    private void updateView(long id) {
+    private void updateView(int id) {
         if (id == -1) {
             title.setText("");
             release.setText("");
@@ -91,22 +91,26 @@ public class MovieFragment extends Fragment {
             Log.d(TAG, "on updateView(" + String.valueOf(id) + ")");
         }
 
-        Uri uri = ContentUris.withAppendedId(MoviesContract.Movies.CONTENT_URI, id);
-        final Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-        if (!cursor.moveToFirst()){
-            cursor.close();
+        Uri movieUri = ContentUris.withAppendedId(MoviesContract.Movies.CONTENT_URI, id);
+        Uri reviewsUri = ContentUris.withAppendedId(MoviesContract.Reviews.CONTENT_URI, id);
+        Log.d(TAG, reviewsUri.toString());
+
+        // Movie Details
+        Cursor mCursor = getActivity().getContentResolver().query(movieUri, null, null, null, null);
+        if (!mCursor.moveToFirst()){
+            mCursor.close();
             return;
         }
 
-        String cBackdropUrl = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH));
+        String cBackdropUrl = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH));
         Picasso.with(getActivity()).load(Utils.getBackDropUri(cBackdropUrl)).into(backdrop);
-        String cTitle = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_TITLE));
-        String cRelease = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_RELEASE_DATE));
-        Float cRating = cursor.getFloat(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_VOTE_AVERAGE));
-        String cPopularity = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_POPULARITY));
-        String cPosterUrl = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH));
-        String cDescription = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_OVERVIEW));
-        String cIsFavored = cursor.getString(cursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_FAVORED));
+        String cTitle = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_TITLE));
+        String cRelease = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_RELEASE_DATE));
+        Float cRating = mCursor.getFloat(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_VOTE_AVERAGE));
+        String cPopularity = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_POPULARITY));
+        String cPosterUrl = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH));
+        String cDescription = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_OVERVIEW));
+        String cIsFavored = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_FAVORED));
         Picasso.with(getActivity()).load(Utils.getPosterUri(cPosterUrl)).into(poster);
         title.setText(cTitle);
         release.setText(getString(R.string.label_release_date) + Utils.getDateInNiceFormat(cRelease));
@@ -115,10 +119,28 @@ public class MovieFragment extends Fragment {
         ratingText.setText("(" + getString(R.string.label_rating) + String.valueOf(cRating) + ")");
         popularity.setText(getString(R.string.label_popularity) + cPopularity);
         description.setText(cDescription);
-        Log.d(TAG, cIsFavored);
         favButton.setSelected(Boolean.parseBoolean(cIsFavored));
-        cursor.close();
-        //Log.d(TAG, favButton.get);
+        mCursor.close();
+
+        // Reviews list
+        String[] columns = new String[] {
+                MoviesContract.Reviews.COLUMN_REVIEW_AUTHOR,
+                MoviesContract.Reviews.COLUMN_REVIEW_CONTENT
+        };
+        int[] to = new int[] {
+                R.id.review_author,
+                R.id.review_content
+        };
+
+        Cursor rCursor = getActivity().getContentResolver().query(reviewsUri,
+                null, null, null, null);
+        if (rCursor != null) {
+            reviewLabel.setText(getString(R.string.label_review));
+            SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+                    R.layout.comment_item,rCursor, columns, to, 0);
+            commentList.setAdapter(adapter);
+            setListViewHeightBasedOnChildren(commentList);
+        }
     }
 
     @Override
@@ -137,5 +159,26 @@ public class MovieFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    private static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, AbsListView.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 }

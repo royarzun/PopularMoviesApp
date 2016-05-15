@@ -71,9 +71,8 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
         ButterKnife.bind(this, rootView);
-        if (getActivity().findViewById(R.id.fragment_detail) != null) {
+        if (getActivity().findViewById(R.id.fragment_detail) != null)
             mTwoPane = true;
-        }
         mAdapter = new MoviesRecyclerViewAdapter(getActivity(), mTwoPane);
         mMovieRecView.setAdapter(mAdapter);
         mMovieRecView.setLayoutManager(new GridLayoutManager(getActivity(), 3));

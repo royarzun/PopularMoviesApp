@@ -55,9 +55,9 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <FrameLayout
+        android:id="@+id/fragment_detail"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:id="@+id/fragment_detail" />
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
 </LinearLayout>

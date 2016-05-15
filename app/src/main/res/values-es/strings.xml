@@ -10,4 +10,5 @@
     <string name="label_votes">Popularidad :\t</string>
     <string name="label_rating">Rating :\t</string>
     <string name="string_my_favorites">Mis Favoritas</string>
+    <string name="label_review">Reseñas :\t</string>
 </resources>
