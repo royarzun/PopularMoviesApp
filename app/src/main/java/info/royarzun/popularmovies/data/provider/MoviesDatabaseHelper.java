@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class MoviesDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = MoviesDatabaseHelper.class.getSimpleName();
-    static final int DB_VERSION = 2;
+    static final int DB_VERSION = 3;
     static final String DB_NAME = "popular_movies_app.db";
 
     public MoviesDatabaseHelper(Context context) {
@@ -31,7 +31,8 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
                 + " UNIQUE (" + MoviesContract.Movies.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
 
         final String createTrailersTable = "CREATE TABLE " + MoviesContract.Trailers.TABLE_NAME + " ( "
-                + MoviesContract.Trailers.COLUMN_TRAILER_ID + " INTEGER PRIMARY KEY, "
+                + MoviesContract.Trailers._ID + " INTEGER PRIMARY_KEY, "
+                + MoviesContract.Trailers.COLUMN_TRAILER_ID + " INTEGER NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_TRAILER_SITE + " TEXT NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_TRAILER_KEY + " TEXT NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "
@@ -40,7 +41,8 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
                 + "UNIQUE (" + MoviesContract.Trailers.COLUMN_TRAILER_ID + ") ON CONFLICT REPLACE);";
 
         final String createReviewsTable = "CREATE TABLE " + MoviesContract.Reviews.TABLE_NAME + " ( "
-                + MoviesContract.Reviews.COLUMN_REVIEW_ID + " INTEGER PRIMARY KEY, "
+                + MoviesContract.Reviews._ID + " INTEGER PRIMARY KEY, "
+                + MoviesContract.Reviews.COLUMN_REVIEW_ID + " INTEGER NOT NULL, "
                 + MoviesContract.Reviews.COLUMN_REVIEW_AUTHOR + " TEXT NOT NULL, "
                 + MoviesContract.Reviews.COLUMN_REVIEW_CONTENT + " TEXT NOT NULL, "
                 + MoviesContract.Reviews.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "

@@ -6,6 +6,9 @@ import java.util.List;
 
 public class MovieComments {
 
+    @SerializedName("id")
+    public int movie_id;
+
     @SerializedName("page")
     public int page;
 

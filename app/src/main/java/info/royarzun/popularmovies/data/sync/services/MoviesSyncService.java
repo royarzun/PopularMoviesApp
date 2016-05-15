@@ -9,66 +9,55 @@ import android.os.IBinder;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Vector;
+import java.util.HashSet;
+import java.util.Set;
 
-import info.royarzun.popularmovies.BuildConfig;
-import info.royarzun.popularmovies.data.models.Movie;
-import info.royarzun.popularmovies.data.models.Movies;
-import info.royarzun.popularmovies.data.provider.MoviesContract;
-import info.royarzun.popularmovies.data.sync.IMovieApiService;
+import info.royarzun.popularmovies.data.models.MovieTrailer;
+import info.royarzun.popularmovies.data.models.MovieTrailers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import info.royarzun.popularmovies.BuildConfig;
+import info.royarzun.popularmovies.data.models.Movie;
+import info.royarzun.popularmovies.data.models.MovieComment;
+import info.royarzun.popularmovies.data.models.MovieComments;
+import info.royarzun.popularmovies.data.models.Movies;
+import info.royarzun.popularmovies.data.provider.MoviesContract;
+import info.royarzun.popularmovies.data.sync.IMovieApiService;
+
 
 public class MoviesSyncService extends IntentService {
     private static final String TAG = MoviesSyncService.class.getSimpleName();
+    private IMovieApiService apiService;
+
+    private Call<Movies> popularMovies;
+    private Call<Movies> topRatedMovies;
+    private Call<MovieComments> movieComments;
+    private Call<MovieTrailers> movieTrailers;
+    private static Set<Integer> moviesId = new HashSet<>(); // To avoid repeating http requests
 
     public MoviesSyncService() {
         super(TAG);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        IMovieApiService service = retrofit.create(IMovieApiService.class);
-        Call<Movies> popularMovies = service.getPopularMovies(BuildConfig.MOVIE_DB_API_KEY);
-        Call<Movies> topRatedMovies = service.getTopRatedMovies(BuildConfig.MOVIE_DB_API_KEY);
 
-        popularMovies.enqueue(new DBStoreCallback());
-        topRatedMovies.enqueue(new DBStoreCallback());
+        apiService = retrofit.create(IMovieApiService.class);
     }
 
-    private void getData(List<Movie> movieList){
-        Vector<ContentValues> contentValuesVectorVector =
-                new Vector<ContentValues>(movieList.size());
-        for (Movie movie: movieList) {
-            ContentValues movieValues = new ContentValues();
-
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_ID, movie.id);
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_FAVORED, false);
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_OVERVIEW, movie.overview);
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_POPULARITY, movie.popularity);
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH, movie.posterPath);
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH, movie.backdropPath);
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_RELEASE_DATE, movie.releaseDate);
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_TITLE, movie.title);
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_VOTE_AVERAGE, movie.voteAverage);
-            movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_VOTE_COUNT, movie.voteCount);
-
-            contentValuesVectorVector.add(movieValues);
-        }
-        for (ContentValues values: contentValuesVectorVector) {
-            this.getContentResolver().insert(MoviesContract.Movies.CONTENT_URI, values);
-        }
-        Log.d(TAG, "Movie data inserted...");
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        popularMovies = apiService.getPopularMovies(BuildConfig.MOVIE_DB_API_KEY);
+        topRatedMovies = apiService.getTopRatedMovies(BuildConfig.MOVIE_DB_API_KEY);
+        popularMovies.enqueue(new MovieStorageCallback());
+        topRatedMovies.enqueue(new MovieStorageCallback());
+        moviesId.clear();
     }
+
 
     @Override
     public void onDestroy() {
@@ -94,7 +83,64 @@ public class MoviesSyncService extends IntentService {
         }
     }
 
-    private class DBStoreCallback implements Callback<Movies> {
+    private class MovieReviewsStorageCallback implements Callback<MovieComments> {
+
+        @Override
+        public void onResponse(Call<MovieComments> call, Response<MovieComments> response) {
+            if (!response.isSuccessful()) {
+                try {
+                    System.out.println(response.errorBody().string());
+                } catch (IOException e) {
+                    // do nothing
+                }
+                return;
+            }
+
+            MovieComments movieComments = response.body();
+            for (MovieComment comment: movieComments.movieCommentList) {
+                ContentValues reviewValues = new ContentValues();
+                reviewValues.put(MoviesContract.Reviews.COLUMN_MOVIE_ID, movieComments.movie_id);
+                reviewValues.put(MoviesContract.Reviews.COLUMN_REVIEW_ID, comment.id);
+                reviewValues.put(MoviesContract.Reviews.COLUMN_REVIEW_AUTHOR, comment.author);
+                reviewValues.put(MoviesContract.Reviews.COLUMN_REVIEW_CONTENT, comment.content);
+
+                getContentResolver().insert(MoviesContract.Reviews.CONTENT_URI, reviewValues);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<MovieComments> call, Throwable t) {
+
+        }
+    }
+
+    private class MovieTrailersStorageCallback implements Callback<MovieTrailers> {
+
+        @Override
+        public void onResponse(Call<MovieTrailers> call, Response<MovieTrailers> response) {
+            if (!response.isSuccessful()) {
+                try {
+                    System.out.println(response.errorBody().string());
+                } catch (IOException e) {
+                    // do nothing
+                }
+                return;
+            }
+
+            MovieTrailers movieTrailers = response.body();
+            for (MovieTrailer comment: movieTrailers.movieTrailers) {
+                ContentValues trailerValues = new ContentValues();
+                getContentResolver().insert(MoviesContract.Reviews.CONTENT_URI, trailerValues);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<MovieTrailers> call, Throwable t) {
+
+        }
+    }
+
+    private class MovieStorageCallback implements Callback<Movies> {
 
         @Override
         public void onResponse(Call<Movies> call, Response<Movies> response) {
@@ -107,7 +153,30 @@ public class MoviesSyncService extends IntentService {
                 return;
             }
             Movies movies = response.body();
-            getData(movies.movieList);
+            for (Movie movie: movies.movieList) {
+                ContentValues movieValues = new ContentValues();
+
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_ID, movie.id);
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_FAVORED, false);
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_OVERVIEW, movie.overview);
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_POPULARITY, movie.popularity);
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH, movie.posterPath);
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH, movie.backdropPath);
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_RELEASE_DATE, movie.releaseDate);
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_TITLE, movie.title);
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_VOTE_AVERAGE, movie.voteAverage);
+                movieValues.put(MoviesContract.Movies.COLUMN_MOVIE_VOTE_COUNT, movie.voteCount);
+
+                getContentResolver().insert(MoviesContract.Movies.CONTENT_URI, movieValues);
+                if (!moviesId.contains(movie.id)){
+                    movieComments = apiService.getComments(movie.id, BuildConfig.MOVIE_DB_API_KEY);
+                    movieComments.enqueue(new MovieReviewsStorageCallback());
+                }
+                moviesId.add(movie.id);
+            }
+            Log.d(TAG, moviesId.toString());
+            Log.d(TAG, String.valueOf(moviesId.size()));
+            //Log.d(TAG, "Movies sync finished...");
         }
 
         @Override

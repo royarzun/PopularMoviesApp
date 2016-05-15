@@ -7,7 +7,6 @@ public class MovieComment {
     @SerializedName("id")
     public String id;
 
-
     @SerializedName("author")
     public String author;
 

@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 
 public final class MoviesContract {
 
-    public interface MoviesColumns {
+    private interface MoviesColumns {
         String COLUMN_MOVIE_ID = "movie_id";
         String COLUMN_MOVIE_TITLE = "movie_title";
         String COLUMN_MOVIE_OVERVIEW = "movie_overview";
@@ -19,14 +19,14 @@ public final class MoviesContract {
         String COLUMN_MOVIE_BACKDROP_PATH = "movie_backdrop_path";
     }
 
-    public interface ReviewsColumns {
+    private interface ReviewsColumns {
         String COLUMN_MOVIE_ID = "movie_id";
         String COLUMN_REVIEW_ID = "review_id";
         String COLUMN_REVIEW_AUTHOR = "review_author";
         String COLUMN_REVIEW_CONTENT = "review_content";
     }
 
-    public interface TrailerColumns {
+    private interface TrailerColumns {
         String COLUMN_MOVIE_ID = "movie_id";
         String COLUMN_TRAILER_ID = "trailer_id";
         String COLUMN_TRAILER_SITE = "trailer_site";
