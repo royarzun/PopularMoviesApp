@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,7 +23,6 @@ import info.royarzun.popularmovies.data.sync.services.MoviesSyncService;
 public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.main_view_toolbar) Toolbar toolbar;
-    @Bind(R.id.main_view_collapse_toolbar) CollapsingToolbarLayout collapsingToolbar;
     @Bind(R.id.main_view_container) ViewPager mViewPager;
     @Bind(R.id.main_view_tabs) TabLayout tabLayout;
 
@@ -37,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        assert collapsingToolbar != null;
-        collapsingToolbar.setTitle(getString(R.string.app_name));
 
         SectionsPagerAdapter mSectionsPagerAdapter =
                 new SectionsPagerAdapter(getSupportFragmentManager());
