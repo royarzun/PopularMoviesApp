@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,36 +13,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:fitsSystemWindows="true"
         tools:context=".ui.activities.MainActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:fitsSystemWindows="true">
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/main_view_collapse_toolbar"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/main_view_toolbar"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:popupTheme="@style/AppTheme" />
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/main_view_toolbar"
-                    android:gravity="top"
-                    android:layout_height="141dp"
-                    android:layout_width="match_parent"
-                    app:popupTheme="@style/AppTheme" />
-
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/main_view_tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"/>
-
-            </android.support.design.widget.CollapsingToolbarLayout>
+            <android.support.design.widget.TabLayout
+                android:id="@+id/main_view_tabs"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_gravity="bottom"/>
 
         </android.support.design.widget.AppBarLayout>
 
