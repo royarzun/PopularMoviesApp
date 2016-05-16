@@ -1,11 +1,12 @@
 package info.royarzun.popularmovies.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.data.provider.MoviesContract;
+import info.royarzun.popularmovies.ui.activities.DetailActivity;
 import info.royarzun.popularmovies.ui.fragments.MovieFragment;
 import info.royarzun.popularmovies.utils.Utils;
 
@@ -77,18 +79,22 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
     }
 
     @Override
-    public MovieVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.movie_item, parent, false);
+    public MovieVH onCreateViewHolder(final ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item, parent, false);
         return new MovieVH(view, new OnVHClickedListener() {
             @Override
             public void onVHClicked(MovieVH vh) {
+                MovieFragment fragment = MovieFragment.newInstance(vh.getMovieID());
                 if (mTwoPane) {
-                    MovieFragment fragment = MovieFragment.newInstance(vh.getMovieID());
                     mContext.getFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_detail, fragment).commit();
+                            .replace(R.id.fragment_detail, fragment).addToBackStack(null).commit();
                 }
                 else {
-                    Log.d(TAG, "One panes detected");
+                    Intent intent = new Intent(mContext.getApplication(), DetailActivity.class);
+                    Bundle args = new Bundle();
+                    args.putInt(DetailActivity.ARG_MOVIE_ID, vh.getMovieID());
+                    intent.putExtras(args);
+                    mContext.startActivity(intent);
                 }
             }
         });
