@@ -29,8 +29,11 @@ public final class MoviesContract {
     private interface TrailerColumns {
         String COLUMN_MOVIE_ID = "movie_id";
         String COLUMN_TRAILER_ID = "trailer_id";
-        String COLUMN_TRAILER_SITE = "trailer_site";
         String COLUMN_TRAILER_KEY = "trailer_key";
+        String COLUMN_TRAILER_NAME = "trailer_name";
+        String COLUMN_TRAILER_SITE = "trailer_site";
+        String COLUMN_TRAILER_SIZE = "trailer_size";
+        String COLUMN_TRAILER_TYPE = "trailer_type";
     }
 
     public static final String CONTENT_AUTHORITY = "info.royarzun.popularmovies.provider";

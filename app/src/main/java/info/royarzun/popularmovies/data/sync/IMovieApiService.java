@@ -23,5 +23,5 @@ public interface IMovieApiService {
     Call<MovieComments> getComments(@Path("id") int id, @Query("api_key") String apiKey);
 
     @GET("movie/{id}/videos")
-    Call<MovieTrailers> getMovieTrailer(@Path("id") int id, @Query("api_key") String apiKey);
+    Call<MovieTrailers> getMovieTrailers(@Path("id") int id, @Query("api_key") String apiKey);
 }

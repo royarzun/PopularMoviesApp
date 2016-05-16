@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class MoviesDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = MoviesDatabaseHelper.class.getSimpleName();
-    static final int DB_VERSION = 3;
+    static final int DB_VERSION = 4;
     static final String DB_NAME = "popular_movies_app.db";
 
     public MoviesDatabaseHelper(Context context) {
@@ -33,8 +33,11 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
         final String createTrailersTable = "CREATE TABLE " + MoviesContract.Trailers.TABLE_NAME + " ( "
                 + MoviesContract.Trailers._ID + " INTEGER PRIMARY_KEY, "
                 + MoviesContract.Trailers.COLUMN_TRAILER_ID + " INTEGER NOT NULL, "
-                + MoviesContract.Trailers.COLUMN_TRAILER_SITE + " TEXT NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_TRAILER_KEY + " TEXT NOT NULL, "
+                + MoviesContract.Trailers.COLUMN_TRAILER_NAME + " TEXT NOT NULL, "
+                + MoviesContract.Trailers.COLUMN_TRAILER_SITE + " TEXT NOT NULL, "
+                + MoviesContract.Trailers.COLUMN_TRAILER_SIZE + " INTEGER NOT NULL, "
+                + MoviesContract.Trailers.COLUMN_TRAILER_TYPE + " TEXT NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "
                 + " FOREIGN KEY (" + MoviesContract.Trailers.COLUMN_MOVIE_ID + ") REFERENCES "
                 + MoviesContract.Movies.TABLE_NAME + " (" + MoviesContract.Movies.COLUMN_MOVIE_ID + "),"

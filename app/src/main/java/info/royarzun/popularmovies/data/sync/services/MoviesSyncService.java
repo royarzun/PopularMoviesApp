@@ -128,9 +128,16 @@ public class MoviesSyncService extends IntentService {
             }
 
             MovieTrailers movieTrailers = response.body();
-            for (MovieTrailer comment: movieTrailers.movieTrailers) {
+            for (MovieTrailer movieTrailer: movieTrailers.movieTrailers) {
                 ContentValues trailerValues = new ContentValues();
-                getContentResolver().insert(MoviesContract.Reviews.CONTENT_URI, trailerValues);
+                trailerValues.put(MoviesContract.Trailers.COLUMN_MOVIE_ID, movieTrailers.id);
+                trailerValues.put(MoviesContract.Trailers.COLUMN_TRAILER_ID, movieTrailer.id);
+                trailerValues.put(MoviesContract.Trailers.COLUMN_TRAILER_KEY, movieTrailer.key);
+                trailerValues.put(MoviesContract.Trailers.COLUMN_TRAILER_NAME, movieTrailer.name);
+                trailerValues.put(MoviesContract.Trailers.COLUMN_TRAILER_SITE, movieTrailer.site);
+                trailerValues.put(MoviesContract.Trailers.COLUMN_TRAILER_SIZE, movieTrailer.size);
+                trailerValues.put(MoviesContract.Trailers.COLUMN_TRAILER_TYPE, movieTrailer.type);
+                getContentResolver().insert(MoviesContract.Trailers.CONTENT_URI, trailerValues);
             }
         }
 
@@ -171,6 +178,8 @@ public class MoviesSyncService extends IntentService {
                 if (!moviesId.contains(movie.id)){
                     movieComments = apiService.getComments(movie.id, BuildConfig.MOVIE_DB_API_KEY);
                     movieComments.enqueue(new MovieReviewsStorageCallback());
+                    movieTrailers = apiService.getMovieTrailers(movie.id, BuildConfig.MOVIE_DB_API_KEY);
+                    movieTrailers.enqueue(new MovieTrailersStorageCallback());
                 }
                 moviesId.add(movie.id);
             }
