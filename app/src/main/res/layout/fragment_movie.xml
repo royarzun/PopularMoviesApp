@@ -22,21 +22,34 @@
             android:id="@+id/fragment_movie_poster"
             android:layout_width="120dp"
             android:layout_height="160dp"
-            android:layout_marginTop="250dp"
             android:layout_marginLeft="15dp"
-            android:layout_alignTop="@+id/fragment_movie_backdrop" />
+            android:layout_marginTop="165dp"
+            android:contentDescription="placeholder"
+            android:layout_alignBottom="@+id/fragment_movie_backdrop" />
+
+        <Button
+            android:id="@+id/fragment_movie_trailers_button"
+            android:background="@color/colorAccent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/fragment_movie_poster"
+            android:layout_alignLeft="@+id/fragment_movie_poster"
+            android:layout_alignRight="@+id/fragment_movie_poster"
+            style="?android:attr/buttonStyleSmall"
+            android:text="@string/label_trailers_button" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fragment_movie_favorite_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:src="@drawable/ic_favorite"
-            android:contentDescription="Add as favorite!!!"
-            android:layout_alignBottom="@+id/fragment_movie_backdrop"
             android:layout_alignRight="@+id/fragment_movie_backdrop"
-            app:layout_anchor="@+id/fragment_movie_backdrop"
+            android:layout_alignBottom="@+id/fragment_movie_backdrop"
+            android:layout_height="56dp"
+            android:layout_width="56dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginRight="15dp"
+            android:clickable="true"
+            android:elevation="8dp"
+            android:src="@drawable/ic_favorite"
             app:layout_anchorGravity="bottom|right|end" />
 
         <LinearLayout

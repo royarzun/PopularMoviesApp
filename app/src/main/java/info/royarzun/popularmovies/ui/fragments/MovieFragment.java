@@ -1,19 +1,20 @@
 package info.royarzun.popularmovies.ui.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -43,6 +44,7 @@ public class MovieFragment extends Fragment {
     @Bind(R.id.fragment_movie_popularity) TextView popularity;
     @Bind(R.id.fragment_movie_overview) TextView description;
     @Bind(R.id.fragment_movie_favorite_button) FloatingActionButton favButton;
+    @Bind(R.id.fragment_movie_trailers_button) Button trailersButton;
     @Bind(R.id.fragment_movie_review_label) TextView reviewLabel;
     @Bind(R.id.fragment_movie_comments_list) ListView commentList;
 
@@ -80,9 +82,10 @@ public class MovieFragment extends Fragment {
         else {
             updateView(-1);
         }
+
     }
 
-    private void updateView(int id) {
+    private void updateView(final int id) {
         if (id == -1) {
             title.setText("");
             release.setText("");
@@ -121,6 +124,20 @@ public class MovieFragment extends Fragment {
         description.setText(cDescription);
         favButton.setSelected(Boolean.parseBoolean(cIsFavored));
         mCursor.close();
+        trailersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MovieTrailerFragment fragment = MovieTrailerFragment.newInstance(id);
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+                if (getActivity().findViewById(R.id.fragment_detail) != null)
+                    ft.replace(R.id.fragment_detail, fragment, "trailers").addToBackStack(null);
+                else ft.replace(R.id.fragment_detail_activity, fragment, "trailers").addToBackStack(null);
+
+                ft.commit();
+
+            }
+        });
 
         // Reviews list
         String[] columns = new String[] {

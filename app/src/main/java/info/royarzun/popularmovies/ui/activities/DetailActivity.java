@@ -1,8 +1,5 @@
 package info.royarzun.popularmovies.ui.activities;
 
-import android.content.Intent;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +9,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.ui.fragments.MovieFragment;
+import info.royarzun.popularmovies.ui.fragments.MovieTrailerFragment;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -26,8 +24,8 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         Bundle b = getIntent().getExtras();
         MovieFragment fragment = MovieFragment.newInstance(b.getInt(ARG_MOVIE_ID));
-        getFragmentManager().beginTransaction().replace(R.id.fragment_detail_activity, fragment, "details")
-                .addToBackStack(null).commit();
+        getFragmentManager().beginTransaction().add(R.id.fragment_detail_activity, fragment)
+                .addToBackStack("detail").commit();
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -35,18 +33,14 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        MovieTrailerFragment tFragment = (MovieTrailerFragment) getFragmentManager().findFragmentByTag("trailers");
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    TaskStackBuilder.create(this)
-                            .addNextIntentWithParentStack(upIntent)
-                            .startActivities();
-                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
+                if (tFragment!=null && tFragment.isVisible()){
+                    getFragmentManager().popBackStack();
+                    return true;
                 }
+                else return super.onOptionsItemSelected(item);
         }
         return super.onOptionsItemSelected(item);
     }

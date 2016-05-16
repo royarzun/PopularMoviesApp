@@ -70,11 +70,9 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
     private Cursor mItems;
     private Activity mContext;
     private boolean mTwoPane;
-    LayoutInflater layoutInflater;
 
     public MoviesRecyclerViewAdapter(Activity context, boolean twoPane) {
         mContext =  context;
-        layoutInflater = LayoutInflater.from(mContext);
         mTwoPane = twoPane;
     }
 
@@ -87,7 +85,7 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
                 MovieFragment fragment = MovieFragment.newInstance(vh.getMovieID());
                 if (mTwoPane) {
                     mContext.getFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_detail, fragment).addToBackStack(null).commit();
+                            .replace(R.id.fragment_detail, fragment, "trailer").addToBackStack(null).commit();
                 }
                 else {
                     Intent intent = new Intent(mContext.getApplication(), DetailActivity.class);

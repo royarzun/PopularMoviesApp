@@ -24,4 +24,5 @@
     <string name="sync_account_type">popularmovies.royarzun.info</string>
     <string name="content_authority">info.royarzun.popularmovies</string>
     <string name="label_review">Reviews :\t</string>
+    <string name="label_trailers_button" translatable="false">Trailers</string>
 </resources>
