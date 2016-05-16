@@ -1,5 +1,6 @@
 package info.royarzun.popularmovies.ui.activities;
 
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -40,7 +41,9 @@ public class DetailActivity extends AppCompatActivity {
                     getFragmentManager().popBackStack();
                     return true;
                 }
-                else return super.onOptionsItemSelected(item);
+                else {
+                    NavUtils.navigateUpFromSameTask(this);
+                }
         }
         return super.onOptionsItemSelected(item);
     }
