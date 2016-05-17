@@ -104,8 +104,7 @@ public class MoviesProvider extends ContentProvider {
                 long _id = MoviesContract.Trailers.getMovieId(uri);
                 cursor = db.query(MoviesContract.Trailers.TABLE_NAME, projection,
                         MoviesContract.Trailers.COLUMN_MOVIE_ID + " = ?",
-                        new String[]{Long.toString(_id)},
-                        null, null, sortOrder);
+                        new String[]{Long.toString(_id)}, null, null, sortOrder);
                 break;
             }
 

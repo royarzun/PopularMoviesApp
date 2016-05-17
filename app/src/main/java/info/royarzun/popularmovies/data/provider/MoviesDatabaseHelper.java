@@ -32,7 +32,7 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
 
         final String createTrailersTable = "CREATE TABLE " + MoviesContract.Trailers.TABLE_NAME + " ( "
                 + MoviesContract.Trailers._ID + " INTEGER PRIMARY_KEY, "
-                + MoviesContract.Trailers.COLUMN_TRAILER_ID + " INTEGER NOT NULL, "
+                + MoviesContract.Trailers.COLUMN_TRAILER_ID + " TEXT NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_TRAILER_KEY + " TEXT NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_TRAILER_NAME + " TEXT NOT NULL, "
                 + MoviesContract.Trailers.COLUMN_TRAILER_SITE + " TEXT NOT NULL, "

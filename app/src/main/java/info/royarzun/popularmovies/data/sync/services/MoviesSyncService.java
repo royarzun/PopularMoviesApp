@@ -183,9 +183,7 @@ public class MoviesSyncService extends IntentService {
                 }
                 moviesId.add(movie.id);
             }
-            Log.d(TAG, moviesId.toString());
-            Log.d(TAG, String.valueOf(moviesId.size()));
-            //Log.d(TAG, "Movies sync finished...");
+            Log.d(TAG, "Movies sync finished...");
         }
 
         @Override

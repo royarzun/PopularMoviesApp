@@ -7,4 +7,7 @@ import java.util.List;
 public class MovieTrailers {
     @SerializedName("results")
     public List<MovieTrailer> movieTrailers;
+
+    @SerializedName("id")
+    public int id;
 }
