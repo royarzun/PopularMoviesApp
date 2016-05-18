@@ -39,18 +39,16 @@
             style="?android:attr/buttonStyleSmall"
             android:text="@string/label_trailers_button" />
 
-        <android.support.design.widget.FloatingActionButton
+        <ToggleButton
             android:id="@+id/fragment_movie_favorite_button"
             android:layout_alignRight="@+id/fragment_movie_backdrop"
             android:layout_alignBottom="@+id/fragment_movie_backdrop"
-            android:layout_height="56dp"
-            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:layout_marginTop="28dp"
             android:layout_marginRight="15dp"
-            android:clickable="true"
-            android:elevation="8dp"
-            android:src="@drawable/ic_favorite"
-            app:layout_anchorGravity="bottom|right|end" />
+            android:textOff="@string/label_off_favored_toggle_btn"
+            android:textOn="@string/label_favored_on_toggle_btn" />
 
         <LinearLayout
             android:id="@+id/fragment_title_details_linear_layout"

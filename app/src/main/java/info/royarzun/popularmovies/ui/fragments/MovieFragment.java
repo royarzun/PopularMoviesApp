@@ -3,11 +3,11 @@ package info.royarzun.popularmovies.ui.fragments;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +20,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 import butterknife.Bind;
@@ -43,7 +44,7 @@ public class MovieFragment extends Fragment {
     @Bind(R.id.fragment_rating_text) TextView ratingText;
     @Bind(R.id.fragment_movie_popularity) TextView popularity;
     @Bind(R.id.fragment_movie_overview) TextView description;
-    @Bind(R.id.fragment_movie_favorite_button) FloatingActionButton favButton;
+    @Bind(R.id.fragment_movie_favorite_button) ToggleButton favButton;
     @Bind(R.id.fragment_movie_trailers_button) Button trailersButton;
     @Bind(R.id.fragment_movie_review_label) TextView reviewLabel;
     @Bind(R.id.fragment_movie_comments_list) ListView commentList;
@@ -96,33 +97,56 @@ public class MovieFragment extends Fragment {
 
         Uri movieUri = ContentUris.withAppendedId(MoviesContract.Movies.CONTENT_URI, id);
         Uri reviewsUri = ContentUris.withAppendedId(MoviesContract.Reviews.CONTENT_URI, id);
-        Log.d(TAG, reviewsUri.toString());
 
         // Movie Details
-        Cursor mCursor = getActivity().getContentResolver().query(movieUri, null, null, null, null);
+        final Cursor mCursor = getActivity().getContentResolver().query(movieUri, null, null, null, null);
         if (!mCursor.moveToFirst()){
             mCursor.close();
             return;
         }
 
-        String cBackdropUrl = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH));
-        Picasso.with(getActivity()).load(Utils.getBackDropUri(cBackdropUrl)).into(backdrop);
-        String cTitle = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_TITLE));
-        String cRelease = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_RELEASE_DATE));
-        Float cRating = mCursor.getFloat(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_VOTE_AVERAGE));
-        String cPopularity = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_POPULARITY));
-        String cPosterUrl = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH));
-        String cDescription = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_OVERVIEW));
-        String cIsFavored = mCursor.getString(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_FAVORED));
-        Picasso.with(getActivity()).load(Utils.getPosterUri(cPosterUrl)).into(poster);
-        title.setText(cTitle);
-        release.setText(getString(R.string.label_release_date) + Utils.getDateInNiceFormat(cRelease));
+        Picasso.with(getActivity()).load(Utils.getBackDropUri(mCursor.getString(
+                mCursor.getColumnIndex(
+                        MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH)))).into(backdrop);
+        Picasso.with(getActivity()).load(Utils.getPosterUri(mCursor.getString(
+                mCursor.getColumnIndex(
+                        MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH)))).into(poster);
+        title.setText(mCursor.getString(
+                mCursor.getColumnIndex(
+                        MoviesContract.Movies.COLUMN_MOVIE_TITLE)));
+        release.setText(getString(R.string.label_release_date) + Utils.getDateInNiceFormat(mCursor.getString(
+                mCursor.getColumnIndex(
+                        MoviesContract.Movies.COLUMN_MOVIE_RELEASE_DATE))));
+        Float cRating = mCursor.getFloat(
+                mCursor.getColumnIndex(
+                        MoviesContract.Movies.COLUMN_MOVIE_VOTE_AVERAGE));
+
         rating.setNumStars(5);
         rating.setRating(cRating/2);
         ratingText.setText("(" + getString(R.string.label_rating) + String.valueOf(cRating) + ")");
-        popularity.setText(getString(R.string.label_popularity) + cPopularity);
-        description.setText(cDescription);
-        favButton.setSelected(Boolean.parseBoolean(cIsFavored));
+
+        popularity.setText(getString(R.string.label_popularity) + mCursor.getString(
+                mCursor.getColumnIndex(
+                        MoviesContract.Movies.COLUMN_MOVIE_POPULARITY)));
+        description.setText(mCursor.getString(
+                mCursor.getColumnIndex(
+                        MoviesContract.Movies.COLUMN_MOVIE_OVERVIEW)));
+        int fav = mCursor.getInt(mCursor.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_FAVORED));
+        if (fav == 0) favButton.setChecked(false);
+        else favButton.setChecked(true);
+        favButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContentValues values = new ContentValues();
+                int favVal = 0;
+                if (favButton.isChecked()) favVal = 1;
+                values.put(MoviesContract.Movies.COLUMN_MOVIE_FAVORED, String.valueOf(favVal));
+                String mSelectionClause = MoviesContract.Movies.COLUMN_MOVIE_ID +  "= ?";
+                String[] mSelectionArgs = {String.valueOf(id)};
+                getActivity().getContentResolver().update(MoviesContract.Movies.CONTENT_URI,
+                        values, mSelectionClause, mSelectionArgs);
+            }
+        });
         mCursor.close();
         trailersButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +182,7 @@ public class MovieFragment extends Fragment {
             commentList.setAdapter(adapter);
             setListViewHeightBasedOnChildren(commentList);
         }
+        rCursor.close();
     }
 
     @Override

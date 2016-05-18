@@ -64,16 +64,15 @@ public class MovieListFragment extends Fragment implements LoaderCallbacks<Curso
         }
         if (getActivity().findViewById(R.id.fragment_detail) != null)
             mTwoPane = true;
-        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
         Log.d(TAG, "onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
         ButterKnife.bind(this, rootView);
-        getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
         mAdapter = new MoviesRecyclerViewAdapter(getActivity(), mTwoPane);
         mMovieRecView.setAdapter(mAdapter);
         mMovieRecView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -102,9 +101,10 @@ public class MovieListFragment extends Fragment implements LoaderCallbacks<Curso
                         MoviesContract.Movies.VOTE_SORT);
             case MY_FAVORITE_MOVIES:
                 Log.d(TAG, "loading my favorite movies list");
-                final String SELECTION = "(" +
-                        MoviesContract.Movies.COLUMN_MOVIE_FAVORED + " = \"TRUE\")";
-                return new CursorLoader(getActivity(), contentUri, null, SELECTION, null, null);
+                String mSelectionClause = MoviesContract.Movies.COLUMN_MOVIE_FAVORED +  " = ?";
+                String[] mSelectionArgs = {"1"};
+                return new CursorLoader(getActivity(), contentUri, null, mSelectionClause,
+                        mSelectionArgs, null);
             default:
                 return new CursorLoader(getActivity(), contentUri, null, null, null, null);
         }
@@ -119,6 +119,6 @@ public class MovieListFragment extends Fragment implements LoaderCallbacks<Curso
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        mAdapter.swapCursor(null);
     }
 }

@@ -11,4 +11,6 @@
     <string name="label_rating">Rating :\t</string>
     <string name="string_my_favorites">My Favorites</string>
     <string name="label_review">Reviews :\t</string>
+    <string name="label_favored_on_toggle_btn" translatable="false">My Favorite</string>
+    <string name="label_off_favored_toggle_btn">Mark as Favorite</string>
 </resources>
