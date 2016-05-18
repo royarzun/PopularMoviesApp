@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class MoviesDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = MoviesDatabaseHelper.class.getSimpleName();
-    static final int DB_VERSION = 4;
+    static final int DB_VERSION = 5;
     static final String DB_NAME = "popular_movies_app.db";
 
     public MoviesDatabaseHelper(Context context) {

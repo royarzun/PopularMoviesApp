@@ -66,7 +66,6 @@ class MovieVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
 public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
-    private static final String TAG = MoviesRecyclerViewAdapter.class.getSimpleName();
     private Cursor mItems;
     private Activity mContext;
     private boolean mTwoPane;
@@ -85,7 +84,8 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
                 MovieFragment fragment = MovieFragment.newInstance(vh.getMovieID());
                 if (mTwoPane) {
                     mContext.getFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_detail, fragment, "trailer").addToBackStack(null).commit();
+                            .replace(R.id.fragment_detail, fragment, "trailer")
+                            .addToBackStack(null).commit();
                 }
                 else {
                     Intent intent = new Intent(mContext.getApplication(), DetailActivity.class);
@@ -101,10 +101,14 @@ public class MoviesRecyclerViewAdapter extends RecyclerView.Adapter<MovieVH> {
     @Override
     public void onBindViewHolder(MovieVH holder, int position) {
         mItems.moveToPosition(position);
-        holder.setMovieID(mItems.getInt(mItems.getColumnIndex(MoviesContract.Movies.COLUMN_MOVIE_ID)));
-        holder.setPosterUri(Utils.getPosterUri(mItems.getString(mItems.getColumnIndex(
-                MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH))));
-        Picasso.with(mContext.getApplicationContext()).load(holder.getPosterUri()).into(holder.mPoster);
+        holder.setMovieID(mItems.getInt(
+                mItems.getColumnIndex(
+                        MoviesContract.Movies.COLUMN_MOVIE_ID)));
+        holder.setPosterUri(Utils.getPosterUri(mItems.getString(
+                mItems.getColumnIndex(
+                        MoviesContract.Movies.COLUMN_MOVIE_POSTER_PATH))));
+        Picasso.with(mContext.getApplicationContext())
+                .load(holder.getPosterUri()).into(holder.mPoster);
     }
 
     public Cursor getCursor() {

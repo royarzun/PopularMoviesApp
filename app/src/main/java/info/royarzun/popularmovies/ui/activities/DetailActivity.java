@@ -25,8 +25,8 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         Bundle b = getIntent().getExtras();
         MovieFragment fragment = MovieFragment.newInstance(b.getInt(ARG_MOVIE_ID));
-        getFragmentManager().beginTransaction().add(R.id.fragment_detail_activity, fragment)
-                .addToBackStack("detail").commit();
+        getFragmentManager().beginTransaction().replace(R.id.fragment_detail_activity, fragment, "detail")
+                .addToBackStack(null).commit();
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -43,8 +43,10 @@ public class DetailActivity extends AppCompatActivity {
                 }
                 else {
                     NavUtils.navigateUpFromSameTask(this);
+                    return true;
                 }
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }
