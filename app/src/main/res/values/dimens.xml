@@ -1,7 +1,11 @@
 <resources>
+    <dimen name="fragment_movie_list_horizontal_margin">15dp</dimen>
+    <dimen name="fragment_movie_list_vertical_margin">15dp</dimen>
+    <dimen name="grid_item_textview_size">45dp</dimen>
+    <dimen name="fragment_movie_poster_size">200dp</dimen>
+    <dimen name="fragment_movie_layout_margin">15dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="appbar_padding_top">8dp</dimen>
-    <dimen name="grid_item_textview_size">45dp</dimen>
-    <dimen name="detail_view_movie_poster_size">400dp</dimen>
 </resources>
