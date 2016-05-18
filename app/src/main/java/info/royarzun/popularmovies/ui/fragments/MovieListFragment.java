@@ -4,10 +4,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +22,7 @@ import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.data.provider.MoviesContract;
 
 
-public class MovieListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MovieListFragment extends Fragment implements LoaderCallbacks<Cursor> {
     private static final String TAG = MovieListFragment.class.getSimpleName();
 
     public static final int POPULAR_MOVIES = 0;
@@ -62,6 +62,8 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
         if (getArguments() != null) {
             mListType = getArguments().getInt(ARGS_LIST_TYPE_PARAM);
         }
+        if (getActivity().findViewById(R.id.fragment_detail) != null)
+            mTwoPane = true;
         getLoaderManager().initLoader(MOVIE_LOADER, null, this);
         Log.d(TAG, "onCreate");
     }
@@ -71,8 +73,7 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_list, container, false);
         ButterKnife.bind(this, rootView);
-        if (getActivity().findViewById(R.id.fragment_detail) != null)
-            mTwoPane = true;
+        getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
         mAdapter = new MoviesRecyclerViewAdapter(getActivity(), mTwoPane);
         mMovieRecView.setAdapter(mAdapter);
         mMovieRecView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -101,7 +102,9 @@ public class MovieListFragment extends Fragment implements LoaderManager.LoaderC
                         MoviesContract.Movies.VOTE_SORT);
             case MY_FAVORITE_MOVIES:
                 Log.d(TAG, "loading my favorite movies list");
-                return new CursorLoader(getActivity(), contentUri, null, null, null, null);
+                final String SELECTION = "(" +
+                        MoviesContract.Movies.COLUMN_MOVIE_FAVORED + " = \"TRUE\")";
+                return new CursorLoader(getActivity(), contentUri, null, SELECTION, null, null);
             default:
                 return new CursorLoader(getActivity(), contentUri, null, null, null, null);
         }
