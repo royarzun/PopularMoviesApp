@@ -48,8 +48,8 @@ public final class MoviesContract {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.popularmovies.movie";
 
         public static final String TABLE_NAME = "movies";
-        public static final String POPULARITY_SORT = COLUMN_MOVIE_POPULARITY + " DESC";
-        public static final String VOTE_SORT = COLUMN_MOVIE_VOTE_AVERAGE + " DESC";
+        public static final String POPULARITY_SORT = COLUMN_MOVIE_POPULARITY + " DESC LIMIT 20";
+        public static final String VOTE_SORT = COLUMN_MOVIE_VOTE_AVERAGE + " DESC LIMIT 20";
 
         public static Uri buildMovieUri(long movieId) {
             return CONTENT_URI.buildUpon().appendPath(String.valueOf(movieId)).build();
