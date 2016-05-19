@@ -24,7 +24,6 @@
             android:layout_height="160dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="165dp"
-            android:contentDescription="placeholder"
             android:layout_alignBottom="@+id/fragment_movie_backdrop" />
 
         <Button
@@ -67,19 +66,42 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <TextView
-                android:id="@+id/fragment_movie_release"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <LinearLayout
                 android:layout_marginTop="5dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/fragment_movie_popularity"
-                android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_release_date"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:id="@+id/fragment_movie_release"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/label_popularity"/>
+
+                <TextView
+                    android:id="@+id/fragment_movie_popularity"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -94,7 +116,7 @@
                     style="?android:ratingBarStyleSmall" />
 
                 <TextView
-                    android:id="@+id/fragment_rating_text"
+                    android:text="@string/label_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -118,11 +140,10 @@
                 android:padding="10dp" />
 
             <TextView
-                android:id="@+id/fragment_movie_review_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
+                android:text="@string/label_review"
                 android:textStyle="bold"
                 android:padding="10dp"
                 android:ellipsize="end" />
