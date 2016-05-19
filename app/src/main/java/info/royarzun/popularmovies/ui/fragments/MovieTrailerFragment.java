@@ -25,7 +25,7 @@ import info.royarzun.popularmovies.data.provider.MoviesContract;
 public class MovieTrailerFragment extends Fragment implements LoaderCallbacks<Cursor> {
     private static final String TAG = MovieTrailerFragment.class.getSimpleName();
     private static final String ARG_MOVIE_ID = "id";
-    private static final int MOVIE_TRAILER_LOADER = 2;
+    private static final int MOVIE_TRAILER_LOADER = 3;
 
     private int movieId;
     private TrailersRecyclerViewAdapter mAdapter;
