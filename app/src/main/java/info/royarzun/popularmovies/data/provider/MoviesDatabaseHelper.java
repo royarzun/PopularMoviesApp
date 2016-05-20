@@ -28,7 +28,7 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
                 + MoviesContract.Movies.COLUMN_MOVIE_BACKDROP_PATH + " TEXT NOT NULL, "
                 + MoviesContract.Movies.COLUMN_MOVIE_POPULARITY + " REAL NOT NULL, "
                 + MoviesContract.Movies.COLUMN_MOVIE_FAVORED + " BOOLEAN DEFAULT FALSE, "
-                + " UNIQUE (" + MoviesContract.Movies.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";
+                + " UNIQUE (" + MoviesContract.Movies.COLUMN_MOVIE_ID + ") ON CONFLICT IGNORE);";
 
         final String createTrailersTable = "CREATE TABLE " + MoviesContract.Trailers.TABLE_NAME + " ( "
                 + MoviesContract.Trailers._ID + " INTEGER PRIMARY_KEY, "
@@ -41,7 +41,7 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
                 + MoviesContract.Trailers.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "
                 + " FOREIGN KEY (" + MoviesContract.Trailers.COLUMN_MOVIE_ID + ") REFERENCES "
                 + MoviesContract.Movies.TABLE_NAME + " (" + MoviesContract.Movies.COLUMN_MOVIE_ID + "),"
-                + "UNIQUE (" + MoviesContract.Trailers.COLUMN_TRAILER_ID + ") ON CONFLICT REPLACE);";
+                + "UNIQUE (" + MoviesContract.Trailers.COLUMN_TRAILER_ID + ") ON CONFLICT IGNORE);";
 
         final String createReviewsTable = "CREATE TABLE " + MoviesContract.Reviews.TABLE_NAME + " ( "
                 + MoviesContract.Reviews._ID + " INTEGER PRIMARY KEY, "
@@ -51,7 +51,7 @@ public class MoviesDatabaseHelper extends SQLiteOpenHelper {
                 + MoviesContract.Reviews.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "
                 + " FOREIGN KEY (" + MoviesContract.Reviews.COLUMN_MOVIE_ID + ") REFERENCES "
                 + MoviesContract.Movies.TABLE_NAME + " (" + MoviesContract.Movies.COLUMN_MOVIE_ID + "),"
-                + "UNIQUE (" + MoviesContract.Reviews.COLUMN_REVIEW_ID + ") ON CONFLICT REPLACE);";
+                + "UNIQUE (" + MoviesContract.Reviews.COLUMN_REVIEW_ID + ") ON CONFLICT IGNORE);";
 
         db.execSQL(createMoviesTable);
         db.execSQL(createTrailersTable);
