@@ -14,7 +14,6 @@ import info.royarzun.popularmovies.ui.fragments.MovieTrailerFragment;
 
 
 public class DetailActivity extends AppCompatActivity {
-    private static final String TAG = DetailActivity.class.getSimpleName();
     @Bind(R.id.detail_activity_toolbar) Toolbar toolbar;
 
     public static final String ARG_MOVIE_ID = "movie_id";

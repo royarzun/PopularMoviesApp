@@ -1,9 +1,5 @@
 package info.royarzun.popularmovies.ui.activities;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +13,6 @@ import butterknife.ButterKnife;
 import butterknife.Bind;
 import info.royarzun.popularmovies.R;
 import info.royarzun.popularmovies.ui.fragments.MovieListFragment;
-import info.royarzun.popularmovies.data.sync.services.MoviesSyncService;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        updateMoviesServiceDB();
 
         setContentView(R.layout.activity_main);
 
@@ -47,14 +41,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-    }
-
-    private void updateMoviesServiceDB() {
-        Intent alarmIntent = new Intent(this, MoviesSyncService.AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent,
-                PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
